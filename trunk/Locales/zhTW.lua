@@ -1,27 +1,4 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("iFriends", "zhTW")
 if not L then return end
 
-L["Allycity"] = "達納蘇斯"
-L["Available columns"] = "可用的欄"
-L["By Class"] = "根據等級"
-L["By Difficulty"] = "根據難度"
-L["By Faction"] = "根據聲望"
-L["By Hostility"] = "根據敵意"
-L["By Threshold"] = "根據門檻"
-L["Center"] = "中央"
-L["Column"] = "欄"
-L["Game/Realm"] = "遊戲/伺服"
-L["Hordecity"] = "奧格瑪"
-L["iFriends provides some pre-layoutet columns for character names, zones, etc. In order to display them in the tooltip, write their names in the desired order into the beneath input."] = "iFriends提供某些預設的欄目如角色名稱、區域、等等。為了顯示這些資訊在工具提示上，請在下方輸入所需的順序。"
-L["Invalid column name!"] = "無效的欄名稱！"
-L["Justification"] = "對齊"
-L["Left"] = "左"
-L["Level"] = "等級"
-L["local friend"] = "本服好友"
-L["Note"] = "註記"
-L["RealID"] = "真實ID"
-L["Right"] = "右"
-L["Show Label"] = "顯示標籤"
-L["Use Icon"] = "使用圖示"
-L["You have no online friends."] = "你沒有線上的好友"
-L["Broadcast"] = "Broadcast"
+--@localization(locale="zhTW", format="lua_additive_table", handle-unlocalized="english", escape-non-ascii=true, same-key-is-true=true)@

@@ -1,6 +1,8 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("iFriends", "enUS", true)
 
+--@localization(locale="enUS", format="lua_additive_table", handle-unlocalized="english", escape-non-ascii=true, same-key-is-true=true)@
 
+--@do-not-package@
 L["You have no online friends."] = "You have no online friends."
 
 L["RealID"] = "RealID"
@@ -33,3 +35,4 @@ L["By Faction"] = "By Faction"
 -- if your game version has completely other typo and spelling, please change (f.e. russia, chinese, etc)
 L["Hordecity"] = "Orgrimmar"
 L["Allycity"]  = "Darnassus"
+--@end-do-not-package@
