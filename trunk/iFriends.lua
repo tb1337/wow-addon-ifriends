@@ -226,7 +226,7 @@ iFriends.Columns = {
 		Label = _G.NAME,
 		Brush = function(v)
 			if( v[ROSTER_GAME] ~= _G.BNET_CLIENT_WOW ) then
-				return "";
+				return v[ROSTER_CHAR_NAME];
 			end
 			
 			-- encolor by class
@@ -266,7 +266,7 @@ iFriends.Columns = {
 		Label = _G.ZONE,
 		Brush = function(v)
 			if( v[ROSTER_GAME] ~= _G.BNET_CLIENT_WOW ) then
-				return "";
+				return v[ROSTER_CHAR_ZONE];
 			end
 			
 			-- encolor by hostility
@@ -424,7 +424,7 @@ function iFriends:SetupFriendsData(friendsOn, bnetOn)
 			pID, givenName, surName, _, toonID, _, isOnline, _, isAFK, isDND, Broadcast, charNote, _, _ = _G.BNGetFriendInfo(i);
 			
 			if( isOnline ) then
-				_, charName, Game, charRealm, _, charFaction, charRace, charClass, _, charZone, charLevel, _ = _G.BNGetToonInfo(pID);
+				_, charName, Game, charRealm, _, charFaction, charRace, charClass, _, charZone, charLevel, addZone = _G.BNGetToonInfo(pID);
 				realID = (_G.BATTLENET_NAME_FORMAT):format(givenName, surName);
 				
 				charStatus = nil;
@@ -442,6 +442,8 @@ function iFriends:SetupFriendsData(friendsOn, bnetOn)
 						[ROSTER_BNET_REALID] = realID,
 						[ROSTER_BNET_PID] = pID,
 						[ROSTER_BNET_TOONID] = toonID,
+						[ROSTER_CHAR_ZONE] = addZone,
+						[ROSTER_CHAR_NAME] = charName,
 					};
 				else
 					Roster[friendsOn +i] = {
@@ -530,7 +532,7 @@ function iFriends:UpdateTooltip()
 				
 				if( member[ROSTER_GAME] == _G.BNET_CLIENT_SC2 ) then
 					a, r, g, b = 0.3, 0.1, 0.8, 1;
-				elseif( member[ROSTER_GAME] == "D3") then
+				elseif( member[ROSTER_GAME] == _G.BNET_CLIENT_D3 ) then
 					a, r, g, b = 0.3, 1, 0.1, 0.1;
 				end
 				
