@@ -1,0 +1,110 @@
+------------------------------------------------------------------------
+r138 | odica | 2011-12-15 15:37:29 +0000 (Thu, 15 Dec 2011) | 1 line
+Changed paths:
+   A /tags/WoW-4.3-release2 (from /trunk:137)
+
+Tagging as WoW-4.3-release2
+------------------------------------------------------------------------
+r137 | Odica | 2011-12-14 22:52:52 +0000 (Wed, 14 Dec 2011) | 9 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+- API: Added function GetLevelString(zone) which returns a ready-to-use string with the recommended level(s) of a zone.
+- Added/updated combined levels for complexes:
+Ring of Observance: 62-75
+Coilfang Reservoir: 60-75
+Tempest Keep: 67-75
+Coldarra: 69-82
+Blackrock Mountain: 47-83
+Caverns of Time: 64-85
+Hellfire Citadel: 57-75 
+------------------------------------------------------------------------
+r136 | Odica | 2011-12-14 21:39:21 +0000 (Wed, 14 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+Updated levels for all WotLK 5-man dungeons to match the levels in the Dungeon Finder.
+------------------------------------------------------------------------
+r135 | Odica | 2011-12-13 22:05:31 +0000 (Tue, 13 Dec 2011) | 29 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+- Updated recommended levels for all Burning Crusade 5-man dungeons to match the Dungeon Finder levels
+- Added groupsize 10 to Blackrock Spire
+
+InstanceClusters functionality has been merged with existing Complex functionality:
+- API: Renamed function IterateInstanceClusters into IterateComplexes
+- API: Renamed function IsInstanceCluster into IsComplex
+- API: GetType(zone) now returns "Complex" instead of "InstanceCluster"
+
+Updated/added relationships between instances and their complexes:
+- Changed Complex for Auchenai Crypts, Shadow Labyrinth, Sethekk Halls and Mana-Tombs from "Auchindoun" into "Ring of Observance"
+- Set Complex to "Blackrock Mountain" for Blackrock Caverns, Blackwing Descent, Blackrock Depths, Blackrock Spire, Blackwing Lair and Molten Core
+- Set Complex to "Coldarra" for The Nexus, The Oculus and The Eye of Eternity
+- Set Complex to "Ahn'Qiraj: The Fallen Kingdom" for Ruins of Ahn'Qiraj and Temple of Ahn'Qiraj
+
+Added relationships between all complexes and their zones:
+- Added "Blackrock Mountain" to complexes of Burning Steppes and Searing Gorge
+- Added "Scarlet Monastery" to complexes of Tirisfal Glades
+- Added "Caverns of Time" to complexes of Tanaris
+- Added "Hellfire Citadel" to complexes of Hellfire Peninsula
+- Added "Coilfang Reservoir" to complexes of Zangarmarsh
+- Added "Ring of Observance" to complexes of Terokkar Forest
+- Added "Tempest Keep" to complexes of Netherstorm
+- Added "Coldarra" to complexes of Borean Tundra
+- Added "Ahn'Qiraj: The Fallen Kingdom" to complexes of Silithus
+
+Zone - Complex relationships have been made available:
+- API: Added function DoesZoneHaveComplexes(zone)
+- API: Added function IterateZoneComplexes(zone)
+- API: Added function GetComplexZone(complex)
+------------------------------------------------------------------------
+r134 | Odica | 2011-12-11 19:16:12 +0000 (Sun, 11 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+(re-commit after packager failure)
+------------------------------------------------------------------------
+r133 | Odica | 2011-12-09 10:19:39 +0000 (Fri, 09 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+(new commit attempt after error)
+------------------------------------------------------------------------
+r132 | Odica | 2011-12-09 10:09:01 +0000 (Fri, 09 Dec 2011) | 10 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+- Ticket 24: If a name is not known by LibTourist, IsZone will no longer return True.
+
+- Ticket 23: A new zone type has been introduced: InstanceCluster. An InstanceCluster is still considered to be a zone (and not an instance or a transport) but can now be distinguished.
+Any old entrance portal coordinates for these zones have been removed, as they aren't instances.
+
+Affected zones: Blackrock Mountain, Scarlet Monastery, Caverns of Time, Hellfire Citadel, Coilfang Reservoir, Ring of Observance, Tempest Keep, Coldarra and Anh'Qiraj: The Fallen Kingdom.
+
+- API: GetType(<zone>) will now return "InstanceCluster" for these zones.
+- API: Added function IsInstanceCluster(<zone>)
+- API: Added function IterateInstanceClusters
+------------------------------------------------------------------------
+r130 | Odica | 2011-12-01 10:20:21 +0000 (Thu, 01 Dec 2011) | 1 line
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+Updated player levels to match the new recommended levels provided by WoW itself, for the following zones: Moonglade, Mount Hyjal, Durotar, Mulgore, Dun Morogh, Badlands, Searing Gorge, Burning Steppes, Elwynn Forest, Blasted Lands, Zul'Drak, Dragonblight and all Vashj'ir zones.
+------------------------------------------------------------------------
+r128 | Odica | 2011-11-29 17:11:02 +0000 (Tue, 29 Nov 2011) | 2 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+   M /trunk/LibTourist-3.0.toc
+
+- Added End Time, Hour of Twilight, Well of Eternity and Dragon Soul
+- updated toc version to 40300
+------------------------------------------------------------------------
+r127 | Odica | 2011-11-17 20:37:16 +0000 (Thu, 17 Nov 2011) | 3 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+- replaced divide by zero by math.huge
+- fixed timeout mechanism on zone search loop
+- updated portal coordinates for Blackrock Caverns
+------------------------------------------------------------------------
