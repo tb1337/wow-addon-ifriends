@@ -1,0 +1,31 @@
+## Interface: 40300
+## Title: i|cffffffaaFriends|r
+## Version: 1.4.7
+## Notes: Improve your social skills - mind your friends!
+## Author: grdn
+## SavedVariables: iFriendsDB
+
+# Libraries
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\LibStub\Libstub.lua
+Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+
+Libs\LibBabble-Zone-3.0\lib.xml
+Libs\LibTourist-3.0\lib.xml
+Libs\LibQTip-1.0\lib.xml
+Libs\LibCrayon-3.0\lib.xml
+
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+
+# Locales
+Locales\Locales.xml
+
+# Core
+iFriends.lua
+Config.lua
