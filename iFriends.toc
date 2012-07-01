@@ -1,4 +1,4 @@
-## Interface: 40300
+## Interface: 50001
 ## Title: i|cffffffaaFriends|r
 ## Version: 1.5.0
 ## Notes: Improve your social skills - mind your friends!
@@ -6,6 +6,7 @@
 ## SavedVariables: iFriendsDB
 
 # Libraries
+#@no-lib-strip@
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\LibStub\Libstub.lua
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
@@ -22,6 +23,7 @@ Libs\AceDB-3.0\AceDB-3.0.xml
 Libs\AceEvent-3.0\AceEvent-3.0.xml
 Libs\AceLocale-3.0\AceLocale-3.0.xml
 Libs\AceTimer-3.0\AceTimer-3.0.xml
+#@end-no-lib-strip@
 
 # Locales
 Locales\Locales.xml
