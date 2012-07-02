@@ -1297,6 +1297,13 @@ do
 		x_offset = 0,
 		y_offset = 0,
 	}
+	
+	zones["Pandaria"] = {
+		type = "Continent",
+		yards = 0,
+		x_offset = 0,
+		y_offset = 0,
+	}
 
 	zones[STORMWIND_BOREANTUNDRA_BOAT] = {
 		paths = {
@@ -4520,7 +4527,7 @@ do
 			zones[continentName].texture = GetMapInfo()
 		end
 		local zoneNames = { GetMapZones(continentID) }
-		local continentYards = zones[continentName].yards
+		local continentYards = zones[continentName].yards or 0
 		
 		-- First, build a collection of zone IDs to be able to lookup a zone ID for SetMapZoom() in case we need to 'dig deeper'
 		for _ = 1, #zoneNames do
