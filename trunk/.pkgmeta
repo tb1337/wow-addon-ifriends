@@ -1,4 +1,20 @@
 package-as: iFriends
+enable-nolib-creation: no
+
+ignore:
+  - Libs/AceAddon-3.0
+  - Libs/AceConfig-3.0
+  - Libs/AceDB-3.0
+  - Libs/AceEvent-3.0
+  - Libs/AceGUI-3.0
+  - Libs/AceLocale-3.0
+  - Libs/AceTimer-3.0
+  - Libs/CallbackHandler-1.0
+  - Libs/LibBabble-Zone-3.0
+  - Libs/LibCrayon-3.0
+  - Libs/LibQTip-1.0
+  - Libs/LibStub
+  - Libs/LibTourist-3.0
 
 externals:
   Libs/CallbackHandler-1.0:
