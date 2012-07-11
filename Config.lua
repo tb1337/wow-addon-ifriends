@@ -380,13 +380,20 @@ cfg = {
 						},
 						arg = {k = "race", v = "Align"},
 					},
+					UseIcon = {
+						type = "toggle",
+						name = L["Use Icon"],
+						order = 15,
+						arg = {k = "race", v = "Icon"},
+					},
 					ColorOption = {
 						type = "select",
 						name = _G.COLOR,
-						order = 15,
+						order = 20,
 						values = {
 							[1] = _G.NONE,
 							[2] = L["By Hostility"],
+							[3] = L["By Faction"],
 						},
 						arg = {k = "race", v = "Color"},
 					},
