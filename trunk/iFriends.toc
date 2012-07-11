@@ -1,21 +1,21 @@
 ## Interface: 50001
 ## Title: i|cffffffaaFriends|r
-## Version: 1.5.0
-## Notes: Improve your social skills - mind your friends!
+## Version: 2.0.2
+## Notes: The dynamic Friends Display for your LDB!
 ## Author: grdn
 ## SavedVariables: iFriendsDB
+## OptionalDeps: Ace3, iLib, LibBabble-Zone-3.0, LibCrayon-3.0, LibTourist-3.0
 
 # Libraries
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\LibStub\Libstub.lua
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
 
+Libs\iLib\lib.xml
 Libs\LibBabble-Zone-3.0\lib.xml
 Libs\LibTourist-3.0\lib.xml
-Libs\LibQTip-1.0\lib.xml
 Libs\LibCrayon-3.0\lib.xml
 
-Libs\AceAddon-3.0\AceAddon-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
@@ -28,4 +28,5 @@ Locales\Locales.xml
 
 # Core
 iFriends.lua
+Columns.lua
 Config.lua
