@@ -2,398 +2,33 @@
 -- Get the addon table
 -----------------------------
 
-local AddonName = select(1, ...);
-local iFriends = LibStub("AceAddon-3.0"):GetAddon(AddonName);
+local AddonName, iFriends = ...;
 
 local L = LibStub("AceLocale-3.0"):GetLocale(AddonName);
 
+local _G = _G; -- I always use _G.FUNC when I call a Global. Upvalueing done here.
+local format = string.format;
+
+-----------------------------------------
+-- Variables, functions and colors
+-----------------------------------------
+
+local cfg; -- this stores our configuration GUI
+
+local COLOR_RED  = "|cffff0000%s|r";
+local COLOR_GREEN= "|cff00ff00%s|r";
+
 ---------------------------
--- Utility functions
+-- The options table
 ---------------------------
-
--- a better strsplit function :)
-local function strsplit(delimiter, text)
-  local list = {}
-  local pos = 1
-  if strfind("", delimiter, 1) then -- this would result in endless loops
-    --error("delimiter matches empty string!")
-  end
-  while 1 do
-    local first, last = strfind(text, delimiter, pos)
-    if first then -- found?
-      tinsert(list, strsub(text, pos, first-1))
-      pos = last+1
-    else
-      tinsert(list, strsub(text, pos))
-      break
-    end
-  end
-  return list
-end
-
----------------------------------
--- The configuration table
----------------------------------
-
-function iFriends:GetConfigColumns()
-	self.ConfigColumns = strsplit(",%s*", self.db.Display);
-end
-
-local function CreateConfig()
-	CreateConfig = nil; -- we just need this function once, thus removing it from memory.
-	
-	local db = {
-		type = "group",
-		name = AddonName,
-		order = 1,
-		get = function(info)
-			return iFriends.db.Column[info.arg.k][info.arg.v];
-		end,
-		set = function(info, value, arg)
-			iFriends.db.Column[info.arg.k][info.arg.v] = value;
-		end,
-		args = {
-			Infotext1 = {
-				type = "description",
-				name = L["iFriends provides some pre-layoutet columns for character names, zones, etc. In order to display them in the tooltip, write their names in the desired order into the beneath input."].."\n",
-				fontSize = "medium",
-				order = 1,
-			},
-			Infotext2 = {
-				type = "description",
-				name = "",
-				fontSize = "medium",
-				order = 2,
-			},
-			Display = {
-				type = "input",
-				name = "",
-				order = 3,
-				width = "full",
-				validate = function(info, value)
-					local list = strsplit(",%s*", value);
-					for i = 1, #list do
-						if( not iFriends.Columns[list[i]] ) then
-							return L["Invalid column name!"];
-						end
-					end
-					return true;
-				end,
-				get = function(info)
-					return iFriends.db.Display;
-				end,
-				set = function(info, value)
-					iFriends.db.Display = value;
-					iFriends:GetConfigColumns();
-					iFriends:GetDisplayedColumns();
-				end,
-			},
-			Spacer1 = {
-				type = "description",
-				name = " ",
-				order = 4,
-			},
-			Column_realid = {
-				type = "group",
-				name = L["RealID"],
-				order = 5,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "realid", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "realid", v = "Align"},
-					},
-				},
-			},
-			Column_realm = {
-				type = "group",
-				name = L["Game/Realm"],
-				order = 6,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "realm", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "realm", v = "Align"},
-					},
-					UseIcon = {
-						type = "toggle",
-						name = L["Use Icon"],
-						order = 3,
-						arg = {k = "realm", v = "Icon"},
-					},
-					ColorOption = {
-						type = "select",
-						name = _G.COLOR,
-						order = 4,
-						values = {
-							[1] = _G.NONE,
-							[2] = L["By Hostility"],
-							[3] = L["By Faction"],
-						},
-						arg = {k = "realm", v = "Color"},
-					},
-				},
-			},
-			Column_level = {
-				type = "group",
-				name = L["Level"],
-				order = 7,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "level", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "level", v = "Align"},
-					},
-					ColorOption = {
-						type = "select",
-						name = _G.COLOR,
-						order = 3,
-						values = {
-							[1] = _G.NONE,
-							[2] = L["By Difficulty"],
-							[3] = L["By Threshold"],
-						},
-						arg = {k = "level", v = "Color"},
-					},
-				},
-			},
-			Column_name = {
-				type = "group",
-				name = _G.NAME,
-				order = 8,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "name", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "name", v = "Align"},
-					},
-					ColorOption = {
-						type = "select",
-						name = _G.COLOR,
-						order = 3,
-						values = {
-							[1] = _G.NONE,
-							[2] = L["By Class"],
-						},
-						arg = {k = "name", v = "Color"},
-					},
-				},
-			},
-			Column_race = {
-				type = "group",
-				name = _G.RACE,
-				order = 9,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "race", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "race", v = "Align"},
-					},
-					ColorOption = {
-						type = "select",
-						name = _G.COLOR,
-						order = 3,
-						values = {
-							[1] = _G.NONE,
-							[2] = L["By Hostility"],
-						},
-						arg = {k = "race", v = "Color"},
-					},
-				},
-			},
-			Column_zone = {
-				type = "group",
-				name = _G.ZONE,
-				order = 10,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "zone", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "zone", v = "Align"},
-					},
-				},
-			},
-			Column_note = {
-				type = "group",
-				name = L["Note"],
-				order = 5,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "note", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "note", v = "Align"},
-					},
-				},
-			},
-			Column_class = {
-				type = "group",
-				name = _G.CLASS,
-				order = 6,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "class", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "class", v = "Align"},
-					},
-					UseIcon = {
-						type = "toggle",
-						name = L["Use Icon"],
-						order = 3,
-						arg = {k = "class", v = "Icon"},
-					},
-					ColorOption = {
-						type = "select",
-						name = _G.COLOR,
-						order = 4,
-						values = {
-							[1] = _G.NONE,
-							[2] = L["By Class"],
-						},
-						arg = {k = "class", v = "Color"},
-					},
-				},
-			},
-			Column_broadcast = {
-				type = "group",
-				name = L["Broadcast"],
-				order = 7,
-				args = {
-					ShowLabel = {
-						type = "toggle",
-						name = L["Show Label"],
-						order = 1,
-						arg = {k = "broadcast", v = "ShowLabel"},
-					},
-					Justification = {
-						type = "select",
-						name = L["Justification"],
-						order = 2,
-						values = {
-							["LEFT"] = L["Left"],
-							["CENTER"] = L["Center"],
-							["RIGHT"] = L["Right"],
-						},
-						arg = {k = "broadcast", v = "Align"},
-					},
-				},
-			},
-		},
-	};
-	
-	local colnames = {};
-	for k, _ in pairs(iFriends.Columns) do
-		table.insert(colnames, k);
-	end
-	
-	db.args.Infotext2.name = ("%s: |cfffed100%s|r\n"):format(
-		L["Available columns"],
-		table.concat(colnames, ", ")
-	);
-	
-	return db;
-end
 
 function iFriends:CreateDB()
 	iFriends.CreateDB = nil;
 	
 	return { profile = {
-		Display = "realid, realm, level, name, race, zone, broadcast",
+		Display = "realid, level, class, name, race, zone, broadcast",
+		DisplayWoWFriends = true,
+		ShowNumBNetFriends = false,
 		Column = {
 			realid = {
 				ShowLabel = true,
@@ -401,9 +36,9 @@ function iFriends:CreateDB()
 			},
 			realm = {
 				ShowLabel = true,
-				Align = "CENTER",
+				Align = "LEFT",
 				Color = 3,
-				Icon = false,
+				Icon = true,
 			},
 			level = {
 				ShowLabel = false,
@@ -429,7 +64,7 @@ function iFriends:CreateDB()
 				Align = "LEFT",
 			},
 			class = {
-				ShowLabel = true,
+				ShowLabel = false,
 				Align = "LEFT",
 				Icon = true,
 				Color = 2,
@@ -437,16 +72,486 @@ function iFriends:CreateDB()
 			broadcast = {
 				ShowLabel = true,
 				Align = "LEFT",
+				Icon = true,
 			},
 		},
 	}};
 end
 
+---------------------------------
+-- The configuration table
+---------------------------------
+
+local function sort_colored_columns(a, b) return a < b end
+local function show_colored_columns()
+	local cols = {};
+	
+	for k, _ in pairs(iFriends.Columns) do
+		table.insert(cols, (_G.tContains(iFriends.DisplayedColumns, k) and COLOR_GREEN or COLOR_RED):format(k) );
+	end
+	table.sort(cols, sort_colored_columns);
+	
+	cfg.args.Infotext2.name = ("%s: |cfffed100%s|r\n"):format(
+		L["Available columns"],
+		table.concat(cols, ", ")
+	);
+	
+	local clean, prefix, suffix;
+	for i, v in ipairs(cols) do
+		clean  = v:sub(11,-3); -- **
+		prefix = v:sub(1, 10); -- since I formatted the string to spare out another table, we need some CPU here. :-P
+		suffix = v:sub(-3, 0); -- **
+		cfg.args["Column_"..clean].name = prefix..iFriends.Columns[clean].label..suffix;
+	end
+end
+-- for usage once
+iFriends.show_colored_columns = show_colored_columns;
+
+cfg = {
+		type = "group",
+		name = AddonName,
+		order = 1,
+		get = function(info)
+			if( not info.arg ) then
+				return iFriends.db[info[#info]];
+			else
+				return iFriends.db.Column[info.arg.k][info.arg.v];
+			end
+		end,
+		set = function(info, value)
+			if( not info.arg ) then
+				iFriends.db[info[#info]] = value;
+			else
+				iFriends.db.Column[info.arg.k][info.arg.v] = value;
+			end
+		end,
+		args = {
+			Header1 = {
+				type = "header",
+				name = L["General Options"],
+				order = 2,
+			},
+			DisplayWoWFriends = {
+				type = "toggle",
+				name = L["Display WoW Friends in another Tooltip"],
+				order = 5,
+				width = "full",
+			},
+			ShowNumBNetFriends = {
+				type = "toggle",
+				name = L["Display the number of your Battle.net friends on the plugin"],
+				order = 10,
+				width = "full"
+			},
+			Spacer2 = {
+				type = "description",
+				name = " ",
+				fontSize = "small",
+				order = 20,
+			},
+			Header2 = {
+				type = "header",
+				name = L["Tooltip Options"],
+				order = 30,
+			},
+			Infotext1 = {
+				type = "description",
+				name = L["iFriends provides some pre-layoutet columns for character names, zones, etc. In order to display them in the tooltip, write their names in the desired order into the beneath input."].."\n",
+				fontSize = "medium",
+				order = 40,
+			},
+			Infotext2 = {
+				type = "description",
+				name = "",
+				fontSize = "medium",
+				order = 50,
+			},
+			Display = {
+				type = "input",
+				name = "",
+				order = 60,
+				width = "full",
+				validate = function(info, value)
+					local list = {strsplit(",", value)};
+					
+					for i, v in ipairs(list) do
+						if( not iFriends.Columns[strtrim(v)] ) then
+							_G.StaticPopup_Show("IADDONS_ERROR_CFG");
+							return L["Invalid column name!"];
+						end
+					end
+					
+					return true;
+				end,
+				set = function(info, value)
+					iFriends.db.Display = value;
+					iFriends:GetDisplayedColumns();
+					show_colored_columns();
+				end,
+			},
+			Spacer1 = {
+				type = "description",
+				name = " ",
+				order = 70,
+			},
+			Column_realid = {
+				type = "group",
+				name = "",
+				order = 80,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the RealID of your Battle.net friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "realid", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "realid", v = "Align"},
+					},
+				},
+			},
+			Column_realm = {
+				type = "group",
+				name = "",
+				order = 90,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the logged on realm of your Battle.net friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "realm", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "realm", v = "Align"},
+					},
+					UseIcon = {
+						type = "toggle",
+						name = L["Use Icon"],
+						order = 15,
+						arg = {k = "realm", v = "Icon"},
+					},
+					ColorOption = {
+						type = "select",
+						name = _G.COLOR,
+						order = 20,
+						values = {
+							[1] = _G.NONE,
+							[2] = L["By Hostility"],
+							[3] = L["By Faction"],
+						},
+						arg = {k = "realm", v = "Color"},
+					},
+				},
+			},
+			Column_level = {
+				type = "group",
+				name = "",
+				order = 100,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the level of your friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "level", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "level", v = "Align"},
+					},
+					ColorOption = {
+						type = "select",
+						name = _G.COLOR,
+						order = 15,
+						values = {
+							[1] = _G.NONE,
+							[2] = L["By Difficulty"],
+							[3] = L["By Threshold"],
+						},
+						arg = {k = "level", v = "Color"},
+					},
+				},
+			},
+			Column_name = {
+				type = "group",
+				name = "",
+				order = 110,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the name of your friends. In addition, a short info is shown if they are AFK or DND."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "name", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "name", v = "Align"},
+					},
+					ColorOption = {
+						type = "select",
+						name = _G.COLOR,
+						order = 15,
+						values = {
+							[1] = _G.NONE,
+							[2] = L["By Class"],
+						},
+						arg = {k = "name", v = "Color"},
+					},
+				},
+			},
+			Column_race = {
+				type = "group",
+				name = "",
+				order = 120,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the race of your Battle.net friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "race", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "race", v = "Align"},
+					},
+					ColorOption = {
+						type = "select",
+						name = _G.COLOR,
+						order = 15,
+						values = {
+							[1] = _G.NONE,
+							[2] = L["By Hostility"],
+						},
+						arg = {k = "race", v = "Color"},
+					},
+				},
+			},
+			Column_zone = {
+				type = "group",
+				name = "",
+				order = 130,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the zone of your friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "zone", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "zone", v = "Align"},
+					},
+				},
+			},
+			Column_note = {
+				type = "group",
+				name = "",
+				order = 140,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the individual note of your friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "note", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "note", v = "Align"},
+					},
+				},
+			},
+			Column_class = {
+				type = "group",
+				name = "",
+				order = 150,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the class of your friends. Choose whether to show the class name or the class icon."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "class", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "class", v = "Align"},
+					},
+					UseIcon = {
+						type = "toggle",
+						name = L["Use Icon"],
+						order = 15,
+						arg = {k = "class", v = "Icon"},
+					},
+					ColorOption = {
+						type = "select",
+						name = _G.COLOR,
+						order = 20,
+						values = {
+							[1] = _G.NONE,
+							[2] = L["By Class"],
+						},
+						arg = {k = "class", v = "Color"},
+					},
+				},
+			},
+			Column_broadcast = {
+				type = "group",
+				name = "",
+				order = 160,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the last broadcast message of your Battle.net friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "broadcast", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "broadcast", v = "Align"},
+					},
+					UseIcon = {
+						type = "toggle",
+						name = L["Use Icon"],
+						order = 15,
+						arg = {k = "broadcast", v = "Icon"},
+					},
+				},
+			},
+		},
+};
+show_colored_columns();
+
 function iFriends:OpenOptions()
 	_G.InterfaceOptionsFrame_OpenToCategory(AddonName);
 end
 
-LibStub("AceConfig-3.0"):RegisterOptionsTable(AddonName, CreateConfig);
+LibStub("AceConfig-3.0"):RegisterOptionsTable(AddonName, cfg);
 LibStub("AceConfigDialog-3.0"):AddToBlizOptions(AddonName);
 _G.SlashCmdList["IFRIENDS"] = iFriends.OpenOptions;
 _G["SLASH_IFRIENDS1"] = "/ifriends";
+
+_G.StaticPopupDialogs["IADDONS_ERROR_CFG"] = {
+	preferredIndex = 3, -- apparently avoids some UI taint
+	text = L["Invalid column name!"],
+	button1 = _G.OKAY,
+	showAlert = 1,
+	timeout = 2.5,
+	hideOnEscape = true,
+};
