@@ -301,35 +301,40 @@ do
 			--@do-not-package@
 			-- add local player
 			table.insert(self.Roster, {
-				"TestChar", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "GM Island", "", ""
+				"Testchar1", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "Orgrimmar", "", ""
+			});
+			setmetatable(self.Roster[(#self.Roster)], mt);
+			-- add local player
+			table.insert(self.Roster, {
+				"Testchar2", 90, _G.LOCALIZED_CLASS_NAMES_MALE["WARRIOR"], "Stormwind City", "", ""
 			});
 			setmetatable(self.Roster[(#self.Roster)], mt);
 			-- add alliance player
 			table.insert(self.BNRoster, {
-				"TestChar", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "GM Island", "", "", 1, 1, "Me Myself", "", "WoW", "Test", 1, "Dwarf"
+				"Testchar3", 88, _G.LOCALIZED_CLASS_NAMES_MALE["SHAMAN"], "Blasted Lands", "", "", 1, 1, "Tony Test", "Hey friends!", "WoW", "Testrealm", 1, "Dwarf"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add horde player
 			table.insert(self.BNRoster, {
-				"TestChar", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "GM Island", "", "", 1, 1, "Me Myself", "", "WoW", "Test", 0, "Orc"
+				"Testchar4", 71, _G.LOCALIZED_CLASS_NAMES_MALE["WARLOCK"], "Hyjal", "", "", 1, 1, "Brigitta Bug", "", "WoW", "Testrealm", 0, "Orc"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add panda player
 			table.insert(self.BNRoster, {
-				"TestChar", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "GM Island", "", "", 1, 1, "Me Myself", "", "WoW", "Test", -1, "Pandaren"
+				"Testchar5", 86, _G.LOCALIZED_CLASS_NAMES_MALE["DEATHKNIGHT"], "The Maelstrom", "", "", 1, 1, "Daniel Developer", "", "WoW", "Testrealm", -1, "Pandaren"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add SC2 player
 			table.insert(self.BNRoster, {
-				"S2Char", "", "", "In Menus", "", "", 1, 1, "Me Myself", "I'm master!", "S2"
+				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "S2"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add D3 player
 			table.insert(self.BNRoster, {
-				"D3Char", "", "", "In Menus", "", "", 1, 1, "Me Myself", "", "D3"
+				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "D3"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
-			--@do-not-package@
+			--@end-do-not-package@
 		end -- end if battle.net
 	end -- end function
 end

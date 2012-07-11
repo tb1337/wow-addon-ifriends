@@ -138,13 +138,26 @@ iFriends.Columns = {
 				return "";
 			end
 			
+			local icon = "";
+			
+			if( iFriends.db.Column.race.Icon ) then
+				if( member.faction == -1 ) then
+					icon = "|TInterface\\Addons\\iFriends\\Images\\FACTION-1:"..iconSize..":"..iconSize.."|t ";
+				else
+					icon = "|TInterface\\FriendsFrame\\PlusManz-".._G.PLAYER_FACTION_GROUP[member.faction]..":"..iconSize..":"..iconSize.."|t ";
+				end
+			end
+			
 			-- encolor by hostility
 			if( iFriends.db.Column.race.Color == 2 ) then
 				local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
-				return ("|cff%02x%02x%02x%s|r"):format(r *255, g *255, b *255, member.race);
+				return ("%s|cff%02x%02x%02x%s|r"):format(icon, r *255, g *255, b *255, member.race);
+			-- encolor by faction
+			elseif( iFriends.db.Column.race.Color == 3 ) then
+				return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction +2], member.race);
 			-- no color
 			else
-				return (COLOR_GOLD):format(member.race);
+				return ("%s"..COLOR_GOLD):format(icon, member.race);
 			end
 		end,
 		isBN = true,
