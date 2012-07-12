@@ -29,6 +29,8 @@ function iFriends:CreateDB()
 		Display = "realid, level, class, name, race, zone, broadcast",
 		DisplayWoWFriends = true,
 		ShowNumBNetFriends = false,
+		ShowLabelsWoW = true, -- this option is set by the mod itself
+		ShowLabelsBN = true, -- this option is set by the mod itself
 		Column = {
 			realid = {
 				ShowLabel = true,
@@ -107,6 +109,30 @@ end
 -- for usage once
 iFriends.show_colored_columns = show_colored_columns;
 
+local function check_labels_hide()
+	-- check battle.net columns
+	local show = false;
+	
+	for i, v in ipairs(iFriends.DisplayedColumns) do
+		if( iFriends.db.Column[v].ShowLabel ) then
+			show = true;
+			break;
+		end
+	end
+	iFriends.db.ShowLabelsBN = show;
+	
+	-- check local friend columns
+	show = false;
+	
+	for i, v in ipairs(iFriends.DisplayedColumnsLocal) do
+		if( iFriends.db.Column[v].ShowLabel ) then
+			show = true;
+			break;
+		end
+	end
+	iFriends.db.ShowLabelsWoW = show;
+end
+
 cfg = {
 		type = "group",
 		name = AddonName,
@@ -123,6 +149,9 @@ cfg = {
 				iFriends.db[info[#info]] = value;
 			else
 				iFriends.db.Column[info.arg.k][info.arg.v] = value;
+				if( info[#info] == "ShowLabel" ) then
+					check_labels_hide();
+				end
 			end
 		end,
 		args = {

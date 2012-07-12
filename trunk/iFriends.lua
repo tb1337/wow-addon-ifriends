@@ -369,6 +369,7 @@ end
 function iFriends:UpdateTooltip(tip, isLocal)	
 	local Roster = isLocal and self.Roster or self.BNRoster;
 	local DisplayedColumns = isLocal and self.DisplayedColumnsLocal or self.DisplayedColumns;
+	local ShowLabels = isLocal and self.db.ShowLabelsWoW or self.db.ShowLabelsBN;
 	
 	tip:Clear();
 	tip:SetColumnLayout(#DisplayedColumns);
@@ -376,7 +377,7 @@ function iFriends:UpdateTooltip(tip, isLocal)
 	local name, info, line, member;
 	
 	-- Looping thru Roster and displaying columns and lines
-	for y = 0, #Roster do
+	for y = (ShowLabels and 0 or 1), #Roster do
 		for x = 1, #DisplayedColumns do
 			name = DisplayedColumns[x];
 			info = self.Columns[name];
