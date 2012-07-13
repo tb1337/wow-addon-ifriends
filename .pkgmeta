@@ -28,6 +28,7 @@ externals:
     url: svn://svn.curseforge.net/wow/ilib/mainline/trunk
 
 optional-dependencies:
+  - ace3
   - ilib
   - libbabble-zone-3-0
   - libtourist-3-0
