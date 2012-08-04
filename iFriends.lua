@@ -299,7 +299,7 @@ do
 				end
 			end -- end for
 			--@do-not-package@
-			-- add local player
+			--[[ add local player
 			table.insert(self.Roster, {
 				"Testchar1", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "Orgrimmar", "", ""
 			});
@@ -334,6 +334,7 @@ do
 				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "D3"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
+			--]]
 			--@end-do-not-package@
 		end -- end if battle.net
 	end -- end function
@@ -424,4 +425,10 @@ function iFriends:UpdateTooltip(tip, isLocal)
 		end
 		
 	end -- end for y
+	
+	if( LibStub("iLib"):IsUpdate(AddonName) ) then
+		tip:AddSeparator();
+		line = tip:AddLine("");
+		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
+	end
 end
