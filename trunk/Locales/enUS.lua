@@ -14,6 +14,8 @@ L["Displays the individual note of your friends."] = true
 L["Displays the class of your friends. Choose whether to show the class name or the class icon."] = true
 L["Displays the last broadcast message of your Battle.net friends."] = true
 
+L["Addon update available!"] = true
+
 L["General Options"] = true
 L["Display WoW Friends in another Tooltip"] = true
 L["Display the number of your Battle.net friends on the plugin"] = true
@@ -23,7 +25,6 @@ L["RealID"] = true
 L["Game/Realm"] = true
 L["Note"] = true
 L["Broadcast"] = true
-L["change"] = true
 
 L["Column"] = true
 L["Show Label"] = true

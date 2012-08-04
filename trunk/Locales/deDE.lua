@@ -6,6 +6,7 @@ if not L then return end
 --@localization(locale="deDE", format="lua_additive_table", handle-unlocalized="english", escape-non-ascii=true, same-key-is-true=true)@
 
 --@do-not-package@
+L["Addon update available!"] = "Addon Update verf\195\188gbar!"
 L["Available columns"] = "Verf\195\188gbare Spalten"
 L["Broadcast"] = "Rundfunk"
 L["By Class"] = "Klasse"
@@ -38,5 +39,4 @@ L["Right"] = "Rechts"
 L["Show Label"] = "Zeige Titel"
 L["Tooltip Options"] = "Tooltip Optionen"
 L["Use Icon"] = "Symbol verwenden"
-L["change"] = "\195\164ndern"
 --@end-do-not-package@
