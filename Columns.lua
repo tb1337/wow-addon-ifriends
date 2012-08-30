@@ -20,7 +20,10 @@ local iconSize = 14;
 
 local COLOR_GOLD = "|cfffed100%s|r";
 
-local FactionColors = {"00ff00", "EE1919", "247FAA"}; -- we define the faction hex colors for the faction columns.
+--local FactionColors = {"00ff00", "EE1919", "247FAA"}; -- we define the faction hex colors for the faction columns.
+local FactionColors = {Horde = "EE1919", Alliance = "247FAA"};
+setmetatable(FactionColors, {__index = function() return "FED100" end});
+
 local FactionCity = {
 	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"],
 	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"],
@@ -68,10 +71,10 @@ iFriends.Columns = {
 			end
 			
 			if( iFriends.db.Column.realm.Icon ) then
-				if( member.faction == -1 ) then
-					icon = "|TInterface\\Addons\\iFriends\\Images\\FACTION-1:"..iconSize..":"..iconSize.."|t ";
+				if( member.faction == "Horde" or member.faction == "Alliance" ) then
+					icon = "|TInterface\\FriendsFrame\\PlusManz-"..member.faction..":"..iconSize..":"..iconSize.."|t ";
 				else
-					icon = "|TInterface\\FriendsFrame\\PlusManz-".._G.PLAYER_FACTION_GROUP[member.faction]..":"..iconSize..":"..iconSize.."|t ";
+					icon = "|TInterface\\Addons\\iFriends\\Images\\FACTION-1:"..iconSize..":"..iconSize.."|t ";
 				end
 			end
 			
@@ -81,7 +84,7 @@ iFriends.Columns = {
 				return ("%s|cff%02x%02x%02x%s|r"):format(icon, r *255, g *255, b *255, member.realm);
 			-- encolor by faction
 			elseif( iFriends.db.Column.realm.Color == 3 ) then
-				return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction +2], member.realm);
+				return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction], member.realm);
 			-- no color
 			else
 				return ("%s"..COLOR_GOLD):format(icon, member.realm);
