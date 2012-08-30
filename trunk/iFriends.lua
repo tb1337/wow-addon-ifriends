@@ -278,7 +278,7 @@ do
 							[8]  = toonID,
 							--[9]  = realID,
 							[9]  = presenceName,
-							[10] = Broadcast,
+							[10] = Broadcast or "",
 							[11] = Game,
 							[12] = charRealm,
 							[13] = charFaction,
@@ -294,8 +294,8 @@ do
 							[6]  = "",
 							[7]  = pID, -- from now on, b.net specific vars
 							[8]  = toonID,
-							[9]  = realID,
-							[10] = Broadcast,
+							[9]  = presenceName,
+							[10] = Broadcast or "",
 							[11] = Game,
 						};
 					end
