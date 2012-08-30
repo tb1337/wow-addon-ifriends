@@ -23,7 +23,7 @@ local COLOR_GREEN= "|cff00ff00%s|r";
 ---------------------------
 
 function iFriends:CreateDB()
-	iFriends.CreateDB = nil;
+	--iFriends.CreateDB = nil;
 	
 	return { profile = {
 		Display = "realid, level, class, name, race, zone, broadcast",
