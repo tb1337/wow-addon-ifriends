@@ -101,10 +101,12 @@ iFriends.ldb.OnEnter = function(anchor)
 			tip = iFriends:GetTooltip("BNet", "UpdateTooltip");
 			tip:SmartAnchorTo(anchor);
 			tip:SetAutoHideDelay(0.25, anchor);
+			tip:Show();
 		else
 			tip = iFriends:GetTooltip("WoW", "UpdateTooltip2");
 			tip:SmartAnchorTo(anchor);
 			tip:SetAutoHideDelay(0.25, anchor);
+			tip:Show();
 		end
 	end
 end
@@ -226,7 +228,8 @@ do
 		
 		-- preventing Lua from declaring local values 10000x times per loop
 		local _, charName, charLevel, charClass, charZone, isOnline, charStatus, charNote;
-		local pID, givenName, surName, toonID, isAFK, isDND, Broadcast, Game, charRealm, charFaction, charRace, realID; -- additional bnet vars
+		--local pID, givenName, surName, toonID, isAFK, isDND, Broadcast, Game, charRealm, charFaction, charRace, realID; -- additional bnet vars
+		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, Broadcast, Game, charRealm, charFaction, charRace, realID; -- additional bnet vars
 		
 		-- iterate through our friends
 		for i = 1, friendsOn do
@@ -249,11 +252,12 @@ do
 		-- iterate through our battle.net friends, if battle.net is connected
 		if( _G.BNFeaturesEnabledAndConnected() ) then
 			for i = 1, bnetOn do
-				pID, givenName, surName, _, toonID, _, isOnline, _, isAFK, isDND, Broadcast, charNote, _, _, _ = _G.BNGetFriendInfo(i);
+				--pID, givenName, surName, _, toonID, _, isOnline, _, isAFK, isDND, Broadcast, charNote, _, _, _ = _G.BNGetFriendInfo(i);
+				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, Broadcast, charNote, _,_,_ = _G.BNGetFriendInfo(i);
 				
 				if( isOnline ) then
 					_, charName, Game, charRealm, _, charFaction, charRace, charClass, _, charZone, charLevel, gameText, _, _, _, _ = _G.BNGetToonInfo(pID);
-					realID = (_G.BATTLENET_NAME_FORMAT):format(givenName, surName);
+					--realID = (_G.BATTLENET_NAME_FORMAT):format(givenName, surName);
 					
 					charStatus = "";
 					if( isAFK ) then
@@ -272,7 +276,8 @@ do
 							[6]  = charNote or "",
 							[7]  = pID,
 							[8]  = toonID,
-							[9]  = realID,
+							--[9]  = realID,
+							[9]  = presenceName,
 							[10] = Broadcast,
 							[11] = Game,
 							[12] = charRealm,
@@ -298,8 +303,11 @@ do
 					setmetatable(self.BNRoster[i], mt);
 				end
 			end -- end for
-			--@do-not-package@
-			--[[ add local player
+		end -- end if battle.net
+		
+		--@do-not-package@
+		--[[
+			-- add local player
 			table.insert(self.Roster, {
 				"Testchar1", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "Orgrimmar", "", ""
 			});
@@ -336,7 +344,6 @@ do
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			--]]
 			--@end-do-not-package@
-		end -- end if battle.net
 	end -- end function
 end
 
