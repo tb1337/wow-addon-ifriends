@@ -23,7 +23,7 @@ local COLOR_GREEN= "|cff00ff00%s|r";
 ---------------------------
 
 function iFriends:CreateDB()
-	--iFriends.CreateDB = nil;
+	iFriends.CreateDB = nil;
 	
 	return { profile = {
 		Display = "realid, level, class, name, race, zone, broadcast",
@@ -51,6 +51,7 @@ function iFriends:CreateDB()
 				ShowLabel = true,
 				Align = "LEFT",
 				Color = 2,
+				EnableScript = true,
 			},
 			race = {
 				ShowLabel = true,
@@ -378,6 +379,14 @@ cfg = {
 							[2] = L["By Class"],
 						},
 						arg = {k = "name", v = "Color"},
+					},
+					EnableScript = {
+						type = "toggle",
+						name = L["Enable Script"],
+						desc = L["If activated, clicking on the given cell will result in something special."],
+						order = 20,
+						width = "full",
+						arg = {k = "name", v = "EnableScript"},
 					},
 				},
 			},

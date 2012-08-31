@@ -43,4 +43,7 @@ L["By Threshold"] = true
 L["By Hostility"] = true
 L["By Class"] = true
 L["By Faction"] = true
+
+L["If activated, clicking on the given cell will result in something special."] = true
+L["Enable Script"] = true
 --@end-do-not-package@

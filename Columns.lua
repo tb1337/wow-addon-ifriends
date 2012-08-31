@@ -21,14 +21,34 @@ local iconSize = 14;
 local COLOR_GOLD = "|cfffed100%s|r";
 
 --local FactionColors = {"00ff00", "EE1919", "247FAA"}; -- we define the faction hex colors for the faction columns.
-local FactionColors = {Horde = "EE1919", Alliance = "247FAA"};
-setmetatable(FactionColors, {__index = function() return "FED100" end});
+--local FactionColors = {Horde = "EE1919", Alliance = "247FAA"};
+--setmetatable(FactionColors, {__index = function() return "FED100" end});
 
-local FactionCity = {
-	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"],
-	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"],
-	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
+--local FactionCity = {
+--	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"],
+--	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"],
+--	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
+--};
+
+local FactionMeta = {
+	Horde = {
+		Color = "EE1919",
+		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"]
+	},
+	Alliance = {
+		Color = "247FAA",
+		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
+	}
 };
+setmetatable(FactionMeta, {
+	__index = function(t, k)
+		if( k == "Color" ) then
+			return "FED100";
+		elseif( k == "City" ) then
+			return LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"];
+		end
+	end
+});
 
 -----------------
 -- Columns
@@ -80,11 +100,13 @@ iFriends.Columns = {
 			
 			-- encolor by hostility
 			if( iFriends.db.Column.realm.Color == 2 ) then
-				local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
+				--local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
+				local r, g, b = LibTourist:GetFactionColor(FactionMeta[member.faction].City);
 				return ("%s|cff%02x%02x%02x%s|r"):format(icon, r *255, g *255, b *255, member.realm);
 			-- encolor by faction
 			elseif( iFriends.db.Column.realm.Color == 3 ) then
-				return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction], member.realm);
+				--return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction], member.realm);
+				return ("%s|cff%s%s|r"):format(icon, FactionMeta[member.faction].Color, member.realm);
 			-- no color
 			else
 				return ("%s"..COLOR_GOLD):format(icon, member.realm);
@@ -144,20 +166,22 @@ iFriends.Columns = {
 			local icon = "";
 			
 			if( iFriends.db.Column.race.Icon ) then
-				if( member.faction == -1 ) then
-					icon = "|TInterface\\Addons\\iFriends\\Images\\FACTION-1:"..iconSize..":"..iconSize.."|t ";
+				if( member.faction == "Horde" or member.faction == "Alliance" ) then
+					icon = "|TInterface\\FriendsFrame\\PlusManz-"..member.faction..":"..iconSize..":"..iconSize.."|t ";
 				else
-					icon = "|TInterface\\FriendsFrame\\PlusManz-".._G.PLAYER_FACTION_GROUP[member.faction]..":"..iconSize..":"..iconSize.."|t ";
+					icon = "|TInterface\\Addons\\iFriends\\Images\\FACTION-1:"..iconSize..":"..iconSize.."|t ";
 				end
 			end
 			
 			-- encolor by hostility
 			if( iFriends.db.Column.race.Color == 2 ) then
-				local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
+				--local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
+				local r, g, b = LibTourist:GetFactionColor(FactionMeta[member.faction].City);
 				return ("%s|cff%02x%02x%02x%s|r"):format(icon, r *255, g *255, b *255, member.race);
 			-- encolor by faction
 			elseif( iFriends.db.Column.race.Color == 3 ) then
-				return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction +2], member.race);
+				--return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction +2], member.race);
+				return ("%s|cff%s%s|r"):format(icon, FactionMeta[member.faction].Color, member.race);
 			-- no color
 			else
 				return ("%s"..COLOR_GOLD):format(icon, member.race);

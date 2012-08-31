@@ -156,7 +156,7 @@ function iFriends:Boot()
 	end
 	
 	self:GetDisplayedColumns();
-	-- the following code snippet is used once and deleted after
+	-- the following code snippet is used once after login
 	self.show_colored_columns();
 	self.show_colored_columns = nil;
 
@@ -166,6 +166,8 @@ function iFriends:Boot()
 	
 	_G.ShowFriends();
 	LibStub("AceTimer-3.0"):ScheduleRepeatingTimer(_G.ShowFriends, 55);
+	
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
 end
 iFriends:RegisterEvent("PLAYER_ENTERING_WORLD", "Boot");
 
