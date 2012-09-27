@@ -38,17 +38,12 @@ local FactionMeta = {
 	Alliance = {
 		Color = "247FAA",
 		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
-	}
+	},
+	Neutral = {
+		Color = "FED100",
+		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"]
+	},
 };
-setmetatable(FactionMeta, {
-	__index = function(t, k)
-		if( k == "Color" ) then
-			return "FED100";
-		elseif( k == "City" ) then
-			return LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"];
-		end
-	end
-});
 
 -----------------
 -- Columns
