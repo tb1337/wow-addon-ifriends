@@ -66,6 +66,13 @@ iFriends.Columns = {
 		end,
 		isBN = true,
 	},
+	battletag = {
+		label = _G.BATTLETAG,
+		brush = function(member)
+			return (_G.FRIENDS_BNET_NAME_COLOR_CODE.."%s|r"):format(member.battletag);
+		end,
+		isBN = true,
+	},
 	realm = {
 		label = L["Game/Realm"],
 		brush = function(member)

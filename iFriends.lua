@@ -213,13 +213,14 @@ do
 			elseif( k == "pid"   ) then return t[7]
 			elseif( k == "toon"  ) then return t[8]
 			elseif( k == "realid") then return t[9]
-			elseif( k == "broadcast")then return t[10]
-			elseif( k == "game"  ) then return t[11]
-			elseif( k == "realm" ) then return t[12]
-			elseif( k == "faction")then return t[13]
-			elseif( k == "race"  ) then return t[14]
+			elseif( k == "battletag")then return t[10]
+			elseif( k == "broadcast")then return t[11]
+			elseif( k == "game"  ) then return t[12]
+			elseif( k == "realm" ) then return t[13]
+			elseif( k == "faction")then return t[14]
+			elseif( k == "race"  ) then return t[15]
 			-- virtual
-			elseif( k == "isWoW" ) then return (not t[11] or t[11] == _G.BNET_CLIENT_WOW)
+			elseif( k == "isWoW" ) then return (not t[12] or t[12] == _G.BNET_CLIENT_WOW)
 			end
 		end,
 	};
@@ -280,11 +281,12 @@ do
 							[8]  = toonID,
 							--[9]  = realID,
 							[9]  = presenceName,
-							[10] = Broadcast or "",
-							[11] = Game,
-							[12] = charRealm,
-							[13] = charFaction,
-							[14] = charRace
+							[10] = battleTag or "",
+							[11] = Broadcast or "",
+							[12] = Game,
+							[13] = charRealm,
+							[14] = charFaction,
+							[15] = charRace
 						};
 					else
 						self.BNRoster[i] = {
@@ -297,8 +299,9 @@ do
 							[7]  = pID, -- from now on, b.net specific vars
 							[8]  = toonID,
 							[9]  = presenceName,
-							[10] = Broadcast or "",
-							[11] = Game,
+							[10] = battleTag or "",
+							[11] = Broadcast or "",
+							[12] = Game,
 						};
 					end
 					
