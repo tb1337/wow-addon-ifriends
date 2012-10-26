@@ -13,6 +13,7 @@ L["Displays the zone of your friends."] = true
 L["Displays the individual note of your friends."] = true
 L["Displays the class of your friends. Choose whether to show the class name or the class icon."] = true
 L["Displays the last broadcast message of your Battle.net friends."] = true
+L["Displays the BattleTag of your Battle.net friends."] = true
 
 L["Addon update available!"] = true
 

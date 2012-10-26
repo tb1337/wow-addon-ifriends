@@ -27,6 +27,7 @@ L["Displays the RealID of your Battle.net friends."] = "Zeigt den echten Namen d
 L["Displays the zone of your friends."] = "Zeigt das Gebiet deiner Freunde an."
 L["Display the number of your Battle.net friends on the plugin"] = "Zeigt die Anzahl der Battle.net Freunde auf dem Plugin"
 L["Display WoW Friends in another Tooltip"] = "Zeige WoW Freunde in einem weiteren Tooltip"
+L["Displays the BattleTag of your Battle.net friends."] = "Zeigt den BattleTag deiner Battle.net Freunde an."
 L["Enable Script"] = "Aktiviere Skript"
 L["Game/Realm"] = "Spiel/Realm"
 L["General Options"] = "Allgemeine Optionen"

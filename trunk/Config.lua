@@ -36,6 +36,10 @@ function iFriends:CreateDB()
 				ShowLabel = true,
 				Align = "LEFT",
 			},
+			battletag = {
+				ShowLabel = false,
+				Align = "LEFT",
+			},
 			realm = {
 				ShowLabel = true,
 				Align = "LEFT",
@@ -251,6 +255,36 @@ cfg = {
 							["RIGHT"] = L["Right"],
 						},
 						arg = {k = "realid", v = "Align"},
+					},
+				},
+			},
+			Column_battletag = {
+				type = "group",
+				name = "",
+				order = 81,
+				args = {
+					Infotext = {
+						type = "description",
+						name = L["Displays the BattleTag of your Battle.net friends."].."\n",
+						order = 1,
+						fontSize = "medium",
+					},
+					ShowLabel = {
+						type = "toggle",
+						name = L["Show Label"],
+						order = 5,
+						arg = {k = "battletag", v = "ShowLabel"},
+					},
+					Justification = {
+						type = "select",
+						name = L["Justification"],
+						order = 10,
+						values = {
+							["LEFT"] = L["Left"],
+							["CENTER"] = L["Center"],
+							["RIGHT"] = L["Right"],
+						},
+						arg = {k = "battletag", v = "Align"},
 					},
 				},
 			},
