@@ -1,10 +1,10 @@
 ## Interface: 50100
 ## Title: i|cffffffaaFriends|r
-## Version: 2.1.0
+## Version: 2.1.2
 ## Notes: The dynamic Friends Display for your LDB!
 ## Author: grdn
 ## SavedVariables: iFriendsDB
-## OptionalDeps: Ace3, iLib, LibBabble-Zone-3.0, LibCrayon-3.0, LibTourist-3.0
+## OptionalDeps: Ace3, iLib, LibCrayon-3.0, LibTourist-3.0
 
 # Libraries
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
@@ -12,7 +12,6 @@ Libs\LibStub\Libstub.lua
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
 
 Libs\iLib\lib.xml
-Libs\LibBabble-Zone-3.0\lib.xml
 Libs\LibTourist-3.0\lib.xml
 Libs\LibCrayon-3.0\lib.xml
 
