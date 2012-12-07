@@ -387,6 +387,11 @@ function iFriends:UpdateTooltip(tip, isLocal)
 	tip:Clear();
 	tip:SetColumnLayout(#DisplayedColumns);
 	
+	if( LibStub("iLib"):IsUpdate(AddonName) and not isLocal ) then
+		line = tip:AddHeader("");
+		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
+	end
+	
 	local name, info, line, member;
 	
 	-- Looping thru Roster and displaying columns and lines
@@ -437,10 +442,4 @@ function iFriends:UpdateTooltip(tip, isLocal)
 		end
 		
 	end -- end for y
-	
-	if( LibStub("iLib"):IsUpdate(AddonName) ) then
-		tip:AddSeparator();
-		line = tip:AddLine("");
-		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
-	end
 end
