@@ -7,7 +7,7 @@ local AddonName, iFriends = ...;
 local L = LibStub("AceLocale-3.0"):GetLocale(AddonName);
 
 local LibCrayon = LibStub("LibCrayon-3.0");
-local LibTourist = LibStub("LibTourist-3.0"); -- a really memory-eating lib.
+local LibTourist = LibStub("LibTourist-3.0");
 
 local _G = _G; -- I always use _G.FUNC when I call a Global. Upvalueing done here.
 local format = string.format;
@@ -20,28 +20,22 @@ local iconSize = 14;
 
 local COLOR_GOLD = "|cfffed100%s|r";
 
---local FactionColors = {"00ff00", "EE1919", "247FAA"}; -- we define the faction hex colors for the faction columns.
---local FactionColors = {Horde = "EE1919", Alliance = "247FAA"};
---setmetatable(FactionColors, {__index = function() return "FED100" end});
-
---local FactionCity = {
---	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"],
---	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"],
---	LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
---};
-
+-- LibBabble-Zone-3.0 is deprecated, but LibTourist now has same functionality
 local FactionMeta = {
 	Horde = {
 		Color = "EE1919",
-		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"]
+		--City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"]
+		City  = LibStub("LibTourist-3.0"):GetLookupTable()["Orgrimmar"]
 	},
 	Alliance = {
 		Color = "247FAA",
-		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
+		--City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
+		City  = LibStub("LibTourist-3.0"):GetLookupTable()["Stormwind City"]
 	},
 	Neutral = {
 		Color = "FED100",
-		City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"]
+		--City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"]
+		City  = LibStub("LibTourist-3.0"):GetLookupTable()["Dalaran"]
 	},
 };
 
