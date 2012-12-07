@@ -10,6 +10,8 @@ local L = LibStub("AceLocale-3.0"):GetLocale(AddonName);
 local _G = _G; -- I always use _G.FUNC when I call a Global. Upvalueing done here.
 local format = string.format;
 
+_G.iFriends = iFriends;
+
 -------------------------------
 -- Registering with iLib
 -------------------------------
