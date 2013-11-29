@@ -81,6 +81,9 @@ iFriends.Columns = {
 				elseif( member.game == _G.BNET_CLIENT_D3 ) then
 					icon = "Diablo 3";
 					icon = (iFriends.db.Column.realm.Icon and "|TInterface\\FriendsFrame\\Battlenet-D3icon:"..iconSize..":"..iconSize.."|t "..icon or icon);
+				elseif( member.game == _G.BNET_CLIENT_WTCG ) then
+					icon = "Hearthstone";
+					icon = (iFriends.db.Column.realm.Icon and "|TInterface\\FriendsFrame\\Battlenet-WTCGicon:"..iconSize..":"..iconSize.."|t "..icon or icon);
 				end
 				
 				return icon;
