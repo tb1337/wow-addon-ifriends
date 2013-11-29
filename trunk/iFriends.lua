@@ -341,12 +341,17 @@ do
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add SC2 player
 			table.insert(self.BNRoster, {
-				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "S2"
+				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "",  "S2"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add D3 player
 			table.insert(self.BNRoster, {
-				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "D3"
+				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", "D3"
+			});
+			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
+			-- add TCG player
+			table.insert(self.BNRoster, {
+				"HSChar", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", "WTCG"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			--]]
@@ -436,6 +441,8 @@ function iFriends:UpdateTooltip(tip, isLocal)
 					a, r, g, b = 0.3, 0.1, 0.8, 1;
 				elseif( member.game == _G.BNET_CLIENT_D3 ) then
 					a, r, g, b = 0.3, 1, 0.1, 0.1;
+				elseif( member.game == _G.BNET_CLIENT_WTCG ) then
+					a, r, g, b = 0.3, 0.1, 1, 1;
 				end
 				
 				tip:SetLineColor(line, r, g, b, a);
