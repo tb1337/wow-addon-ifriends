@@ -337,7 +337,7 @@ do
 		end -- end if battle.net
 		
 		--@do-not-package@
-		--
+		--[[
 			-- add local player
 			table.insert(self.Roster, {
 				"Testchar1", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "Orgrimmar", "", ""
@@ -393,7 +393,7 @@ do
 				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_CLNT
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
-			--
+			--]]
 			--@end-do-not-package@
 	end -- end function
 end
