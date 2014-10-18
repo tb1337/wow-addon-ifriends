@@ -277,7 +277,7 @@ do
 						[1]  = "",
 						[2]  = "",
 						[3]  = "",
-						[4]  = _G.UNKNOWN,
+						[4]  = "",
 						[5]  = charStatus,
 						[6]  = charNote or "",
 						[7]  = pID,
