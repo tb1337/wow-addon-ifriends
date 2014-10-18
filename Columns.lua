@@ -39,6 +39,39 @@ local FactionMeta = {
 	},
 };
 
+-- Blizzard game table
+local BlizzGames = {
+	[BNET_CLIENT_APP] = {
+		name = "Battle.net",
+		icon = "|TInterface\\FriendsFrame\\PlusManz-BattleNet:"..iconSize..":"..iconSize.."|t",
+		rgba = {0.3, 1, 1, 0.3},
+	},
+	[BNET_CLIENT_SC2] = {
+		name = "StarCraft 2",
+		icon = "|TInterface\\FriendsFrame\\Battlenet-Sc2icon:"..iconSize..":"..iconSize.."|t",
+		rgba = {0.1, 0.8, 1, 0.4},
+	},
+	[BNET_CLIENT_D3] = {
+		name = "Diablo 3",
+		icon = "|TInterface\\FriendsFrame\\Battlenet-D3icon:"..iconSize..":"..iconSize.."|t",
+		rgba = {1, 0.1, 0.1, 0.4},
+	},
+	[BNET_CLIENT_WTCG] = {
+		name = "Hearthstone",
+		icon = "|TInterface\\FriendsFrame\\Battlenet-WTCGicon:"..iconSize..":"..iconSize.."|t",
+		rgba = {1, 0.9, 0.7, 0.4},
+	},
+	[BNET_CLIENT_HEROES] = {
+		name = "Heroes of the Storm",
+		icon = "|TInterface\\FriendsFrame\\Battlenet-HotSicon:"..iconSize..":"..iconSize.."|t",
+		rgba = {0.5, 0.2, 0.6, 0.4},
+	},
+};
+BlizzGames[BNET_CLIENT_CLNT] = BlizzGames[BNET_CLIENT_APP]; -- dunno what BNET_CLIENT_CLNT is, CLNT means client so I associate it with App
+
+-- making addon global for the UpdateTooltip method (encoloring lines by games)
+iFriends.BlizzGames = BlizzGames;
+
 -----------------
 -- Columns
 -----------------
@@ -73,18 +106,11 @@ iFriends.Columns = {
 			local icon = "";
 			
 			if( not member.isWoW ) then
-				icon = member.game; -- forward compatbility :-P
+				local game = BlizzGames[member.game];
 				
-				if( member.game == _G.BNET_CLIENT_SC2 ) then
-					icon = "StarCraft 2";
-					icon = (iFriends.db.Column.realm.Icon and "|TInterface\\FriendsFrame\\Battlenet-Sc2icon:"..iconSize..":"..iconSize.."|t "..icon or icon);
-				elseif( member.game == _G.BNET_CLIENT_D3 ) then
-					icon = "Diablo 3";
-					icon = (iFriends.db.Column.realm.Icon and "|TInterface\\FriendsFrame\\Battlenet-D3icon:"..iconSize..":"..iconSize.."|t "..icon or icon);
-				elseif( member.game == _G.BNET_CLIENT_WTCG ) then
-					icon = "Hearthstone";
-					icon = (iFriends.db.Column.realm.Icon and "|TInterface\\FriendsFrame\\Battlenet-WTCGicon:"..iconSize..":"..iconSize.."|t "..icon or icon);
-				end
+				icon = member.game; -- forward compatbility :-P
+				icon = game and game.name or icon;
+				icon = game and game.icon and iFriends.db.Column.realm.Icon and BlizzGames[member.game].icon.." "..icon or icon;
 				
 				return icon;
 			end
@@ -99,12 +125,10 @@ iFriends.Columns = {
 			
 			-- encolor by hostility
 			if( iFriends.db.Column.realm.Color == 2 ) then
-				--local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
 				local r, g, b = LibTourist:GetFactionColor(FactionMeta[member.faction].City);
 				return ("%s|cff%02x%02x%02x%s|r"):format(icon, r *255, g *255, b *255, member.realm);
 			-- encolor by faction
 			elseif( iFriends.db.Column.realm.Color == 3 ) then
-				--return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction], member.realm);
 				return ("%s|cff%s%s|r"):format(icon, FactionMeta[member.faction].Color, member.realm);
 			-- no color
 			else
@@ -174,12 +198,10 @@ iFriends.Columns = {
 			
 			-- encolor by hostility
 			if( iFriends.db.Column.race.Color == 2 ) then
-				--local r, g, b = LibTourist:GetFactionColor(FactionCity[member.faction +2]);
 				local r, g, b = LibTourist:GetFactionColor(FactionMeta[member.faction].City);
 				return ("%s|cff%02x%02x%02x%s|r"):format(icon, r *255, g *255, b *255, member.race);
 			-- encolor by faction
 			elseif( iFriends.db.Column.race.Color == 3 ) then
-				--return ("%s|cff%s%s|r"):format(icon, FactionColors[member.faction +2], member.race);
 				return ("%s|cff%s%s|r"):format(icon, FactionMeta[member.faction].Color, member.race);
 			-- no color
 			else
