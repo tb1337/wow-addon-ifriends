@@ -233,8 +233,8 @@ do
 		
 		-- preventing Lua from declaring local values 10000x times per loop
 		local _, charName, charLevel, charClass, charZone, isOnline, charStatus, charNote;
-		--local pID, givenName, surName, toonID, isAFK, isDND, Broadcast, Game, charRealm, charFaction, charRace, realID; -- additional bnet vars
-		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, Broadcast, Game, charRealm, charFaction, charRace, realID; -- additional bnet vars
+		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, broadcastText, numToons; -- additional BNET vars
+		local hasFocus, client, realmName, realmID, charFaction, charRace, charGuild, toonID; -- toon specific vars
 		
 		-- iterate through our friends
 		for i = 1, friendsOn do
@@ -255,15 +255,16 @@ do
 		end
 		
 		-- iterate through our battle.net friends, if battle.net is connected
-		if( _G.BNFeaturesEnabledAndConnected() ) then
+		if( _G.BNFeaturesEnabledAndConnected() ) then			
 			for i = 1, bnetOn do
-				--pID, givenName, surName, _, toonID, _, isOnline, _, isAFK, isDND, Broadcast, charNote, _, _, _ = _G.BNGetFriendInfo(i);
-				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, Broadcast, charNote, _,_,_ = _G.BNGetFriendInfo(i);
+				-- determines whether a friend logged into WoW or another game
+				local loggedWoW = false;
+				local loggedApp = false;
+				local loggedGame = false;
+			
+				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, broadcastText, charNote, _,_,_ = _G.BNGetFriendInfo(i);
 				
-				if( isOnline ) then
-					_, charName, Game, charRealm, _, charFaction, charRace, charClass, _, charZone, charLevel, gameText, _, _, _, _ = _G.BNGetToonInfo(pID);
-					--realID = (_G.BATTLENET_NAME_FORMAT):format(givenName, surName);
-					
+				if( isOnline ) then					
 					charStatus = "";
 					if( isAFK ) then
 						charStatus = ("<%s>"):format(_G.AFK);
@@ -271,40 +272,63 @@ do
 						charStatus = ("<%s>"):format(_G.DND);
 					end
 					
-					if( Game == _G.BNET_CLIENT_WOW ) then
-						self.BNRoster[i] = {
-							[1]  = charName,
-							[2]  = tonumber(charLevel), -- the b.net API returns the level as string. WTH
-							[3]  = charClass,
-							[4]  = ((not charZone or charZone == "") and _G.UNKNOWN or charZone), -- currently no zones in beta O_o
-							[5]  = charStatus,
-							[6]  = charNote or "",
-							[7]  = pID,
-							[8]  = toonID,
-							--[9]  = realID,
-							[9]  = presenceName,
-							[10] = battleTag or "",
-							[11] = Broadcast or "",
-							[12] = Game,
-							[13] = charRealm,
-							[14] = charFaction,
-							[15] = charRace
-						};
-					else
-						self.BNRoster[i] = {
-							[1]  = charName,
-							[2]  = "",
-							[3]  = "",
-							[4]  = gameText,
-							[5]  = "",
-							[6]  = "",
-							[7]  = pID, -- from now on, b.net specific vars
-							[8]  = toonID,
-							[9]  = presenceName,
-							[10] = battleTag or "",
-							[11] = Broadcast or "",
-							[12] = Game,
-						};
+					-- create roster table without any info
+					self.BNRoster[i] = {
+						[1]  = "",
+						[2]  = "",
+						[3]  = "",
+						[4]  = _G.UNKNOWN,
+						[5]  = charStatus,
+						[6]  = charNote or "",
+						[7]  = pID,
+						[8]  = toonID,
+						[9]  = presenceName,
+						[10] = battleTag or "",
+						[11] = broadcastText or "",
+						[12] = "",
+						[13] = "",
+						[14] = "",
+						[15] = ""
+					};
+					
+					-- scan thru friends logged in Blizzard games/apps
+					numToons = _G.BNGetNumFriendToons(i);
+					
+					for t = 1, numToons do
+						hasFocus, charName, client, charRealm, realmID, charFaction, charRace, charClass, charGuild, charZone, charLevel, gameText, _, _, _, toonID = _G.BNGetFriendToonInfo(i, t);
+						
+						-- save if the player is logged into WoW, all other data will be overwritten
+						if( client == BNET_CLIENT_WOW ) then
+							loggedWoW = true;
+							
+							self.BNRoster[i][1]  = charName;
+							self.BNRoster[i][2]  = tonumber(charLevel); -- the bnet API returns the level as string. WTH
+							self.BNRoster[i][3]  = charClass;
+							self.BNRoster[i][4]  = ((not charZone or charZone == "") and _G.UNKNOWN or charZone); -- currently no zones in beta O_o
+							self.BNRoster[i][12] = client;
+							self.BNRoster[i][13] = charRealm;
+							self.BNRoster[i][14] = charFaction;
+							self.BNRoster[i][15] = charRace;
+						else
+							-- only if not logged into WoW!
+							-- if the player is logged on the b.net app, only the client will be overwritten
+							if( client == BNET_CLIENT_APP ) then
+								loggedApp = true;
+								
+								if( not loggedGame and not loggedWoW ) then
+									self.BNRoster[i][12] = client;
+								end
+							-- if not logged into WoW, but another game, some data will be overwritten
+							else
+								loggedGame = true;
+								
+								if( not loggedWoW ) then
+									self.BNRoster[i][1]  = charName;
+									self.BNRoster[i][4]  = gameText;
+									self.BNRoster[i][12] = client;
+								end
+							end
+						end
 					end
 					
 					setmetatable(self.BNRoster[i], mt);
@@ -313,7 +337,7 @@ do
 		end -- end if battle.net
 		
 		--@do-not-package@
-		--[[
+		--
 			-- add local player
 			table.insert(self.Roster, {
 				"Testchar1", 90, _G.LOCALIZED_CLASS_NAMES_MALE["MONK"], "Orgrimmar", "", ""
@@ -326,35 +350,50 @@ do
 			setmetatable(self.Roster[(#self.Roster)], mt);
 			-- add alliance player
 			table.insert(self.BNRoster, {
-				"Testchar3", 88, _G.LOCALIZED_CLASS_NAMES_MALE["SHAMAN"], "Blasted Lands", "", "", 1, 1, "Tony Test", "Hey friends!", "WoW", "Testrealm", 1, "Dwarf"
+				"Testchar3", 88, _G.LOCALIZED_CLASS_NAMES_MALE["SHAMAN"], "Blasted Lands", "", "", 1, 1, "Tony Test", "", "Hey friends!", BNET_CLIENT_WOW, "Testrealm", "Alliance", "Dwarf"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add horde player
 			table.insert(self.BNRoster, {
-				"Testchar4", 71, _G.LOCALIZED_CLASS_NAMES_MALE["WARLOCK"], "Hyjal", "", "", 1, 1, "Brigitta Bug", "", "WoW", "Testrealm", 0, "Orc"
+				"Testchar4", 71, _G.LOCALIZED_CLASS_NAMES_MALE["WARLOCK"], "Hyjal", "", "", 1, 1, "Brigitta Bug", "", "", BNET_CLIENT_WOW, "Testrealm", "Horde", "Orc"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add panda player
 			table.insert(self.BNRoster, {
-				"Testchar5", 86, _G.LOCALIZED_CLASS_NAMES_MALE["DEATHKNIGHT"], "The Maelstrom", "", "", 1, 1, "Daniel Developer", "", "WoW", "Testrealm", -1, "Pandaren"
+				"Testchar5", 86, _G.LOCALIZED_CLASS_NAMES_MALE["DEATHKNIGHT"], "The Maelstrom", "", "", 1, 1, "Daniel Developer", "", "", BNET_CLIENT_WOW, "Testrealm", "Neutral", "Pandaren"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add SC2 player
 			table.insert(self.BNRoster, {
-				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "",  "S2"
+				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "",  BNET_CLIENT_SC2
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add D3 player
 			table.insert(self.BNRoster, {
-				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", "D3"
+				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_D3
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add TCG player
 			table.insert(self.BNRoster, {
-				"HSChar", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", "WTCG"
+				"HSChar", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_WTCG
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
-			--]]
+			-- add App player
+			table.insert(self.BNRoster, {
+				"HotSChar", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_HEROES
+			});
+			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
+			-- add CLNT player
+			table.insert(self.BNRoster, {
+				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_APP
+			});
+			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
+			-- add App player
+			table.insert(self.BNRoster, {
+				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_CLNT
+			});
+			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
+			--
 			--@end-do-not-package@
 	end -- end function
 end
@@ -399,7 +438,7 @@ function iFriends:UpdateTooltip(tip, isLocal)
 		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
 	end
 	
-	local name, info, line, member;
+	local name, info, line, member, color, r, g, b, a;
 	
 	-- Looping thru Roster and displaying columns and lines
 	for y = (ShowLabels and 0 or 1), #Roster do
@@ -434,16 +473,9 @@ function iFriends:UpdateTooltip(tip, isLocal)
 		
 		if( member ) then
 			tip:SetLineScript(line, "OnMouseDown", LineClick, member);
-			if( member.game ~= _G.BNET_CLIENT_WOW ) then
-				local a, r, g, b = 0, 0, 0, 0;
-				
-				if( member.game == _G.BNET_CLIENT_SC2 ) then
-					a, r, g, b = 0.3, 0.1, 0.8, 1;
-				elseif( member.game == _G.BNET_CLIENT_D3 ) then
-					a, r, g, b = 0.3, 1, 0.1, 0.1;
-				elseif( member.game == _G.BNET_CLIENT_WTCG ) then
-					a, r, g, b = 0.3, 0.1, 1, 1;
-				end
+			if( member.game ~= _G.BNET_CLIENT_WOW and not isLocal ) then
+				color = self.BlizzGames[member.game] and self.BlizzGames[member.game].rgba or {1, 1, 1, 1};
+				r, g, b, a = unpack(color);
 				
 				tip:SetLineColor(line, r, g, b, a);
 			end
