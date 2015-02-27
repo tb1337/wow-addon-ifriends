@@ -233,8 +233,10 @@ do
 		
 		-- preventing Lua from declaring local values 10000x times per loop
 		local _, charName, charLevel, charClass, charZone, isOnline, charStatus, charNote;
-		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, broadcastText, numToons; -- additional BNET vars
+		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, broadcastText, numToons, broadcastTime; -- additional BNET vars
 		local hasFocus, client, realmName, realmID, charFaction, charRace, charGuild, toonID; -- toon specific vars
+		
+		local now = time();
 		
 		-- iterate through our friends
 		for i = 1, friendsOn do
@@ -262,7 +264,7 @@ do
 				local loggedApp = false;
 				local loggedGame = false;
 			
-				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, broadcastText, charNote, _,_,_ = _G.BNGetFriendInfo(i);
+				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, broadcastText, charNote, _, broadcastTime ,_ = _G.BNGetFriendInfo(i);
 				
 				if( isOnline ) then					
 					charStatus = "";
@@ -270,6 +272,11 @@ do
 						charStatus = ("<%s>"):format(_G.AFK);
 					elseif( isDND ) then
 						charStatus = ("<%s>"):format(_G.DND);
+					end
+					
+					-- add broadcast time to broadcast text, CurseForge Ticket #4 by CenujiDev
+					if( broadcastText and broadcastText ~= "" ) then
+						broadcastText = ("%s (%s)"):format(broadcastText, _G.SecondsToTime(now - broadcastTime, false, true, 1));
 					end
 					
 					-- create roster table without any info
@@ -393,8 +400,8 @@ do
 				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_CLNT
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
-			--]]
-			--@end-do-not-package@
+		--]]
+		--@end-do-not-package@
 	end -- end function
 end
 
