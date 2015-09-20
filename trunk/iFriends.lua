@@ -77,7 +77,6 @@ end
 
 iFriends.ldb.OnEnter = function(anchor)
 	local showLocal, showBN = (#iFriends.Roster > 0 and iFriends.db.DisplayWoWFriends), (#iFriends.BNRoster > 0);
-	local showBoth = (showLocal and showBN);
 	
 	if( iFriends:IsTooltip("BNet") or iFriends:IsTooltip("WoW") or (not showLocal and not showBN) ) then
 		return; -- when no friends are present, we won't show a tooltip (I dislike that!).
