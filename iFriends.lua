@@ -298,10 +298,10 @@ do
 					};
 					
 					-- scan thru friends logged in Blizzard games/apps
-					numToons = _G.BNGetNumFriendToons(i);
+					numToons = _G.BNGetNumFriendGameAccounts(i);
 					
 					for t = 1, numToons do
-						hasFocus, charName, client, charRealm, realmID, charFaction, charRace, charClass, charGuild, charZone, charLevel, gameText, _, _, _, toonID = _G.BNGetFriendToonInfo(i, t);
+						hasFocus, charName, client, charRealm, realmID, charFaction, charRace, charClass, charGuild, charZone, charLevel, gameText, _, _, _, toonID = _G.BNGetFriendGameAccountInfo(i, t);
 						
 						-- save if the player is logged into WoW, all other data will be overwritten
 						if( client == BNET_CLIENT_WOW ) then
@@ -371,32 +371,37 @@ do
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add SC2 player
 			table.insert(self.BNRoster, {
-				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "",  BNET_CLIENT_SC2
+				"S2Char", "", "", "In Menus", "", "", 1, 1, "Eric Error", "I'm master!", "",  BNET_CLIENT_SC2, "", "", ""
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add D3 player
 			table.insert(self.BNRoster, {
-				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_D3
+				"D3Char", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_D3, "", "", ""
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add TCG player
 			table.insert(self.BNRoster, {
-				"HSChar", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_WTCG
+				"HSChar", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_WTCG, "", "", ""
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add App player
 			table.insert(self.BNRoster, {
-				"HotSChar", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_HEROES
+				"HotSChar", "", "", "In Menus", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_HEROES, "", "", ""
+			});
+			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
+			-- add Overwatch player
+			table.insert(self.BNRoster, {
+				"OverwatchChar", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_OVERWATCH, "", "", ""
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add CLNT player
 			table.insert(self.BNRoster, {
-				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_APP
+				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_APP, "", "", ""
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add App player
 			table.insert(self.BNRoster, {
-				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_CLNT
+				"", "", "", "", "", "", 1, 1, "Peter Patch", "", "", BNET_CLIENT_CLNT, "", "", ""
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 		--]]
@@ -412,7 +417,7 @@ local function LineClick(_, member, button)
 	if( button == "LeftButton" ) then
 		if( _G.IsModifierKeyDown() ) then
 			if( _G.IsAltKeyDown() ) then
-				if( member.realid and not _G.CanCooperateWithToon(member.toon) ) then else
+				if( member.realid and not _G.CanCooperateWithGameAccount(member.toon) ) then else
 					_G.InviteUnit(member.name);
 				end
 			end

@@ -66,6 +66,11 @@ local BlizzGames = {
 		icon = "|TInterface\\FriendsFrame\\Battlenet-HotSicon:"..iconSize..":"..iconSize.."|t",
 		rgba = {0.5, 0.2, 0.6, 0.4},
 	},
+	[BNET_CLIENT_OVERWATCH] = {
+		name = "Overwatch",
+		icon = "|TInterface\\FriendsFrame\\Battlenet-Overwatchicon:"..iconSize..":"..iconSize.."|t",
+		rgba = {0.8, 0.8, 0.8, 0.4},
+	},
 };
 BlizzGames[BNET_CLIENT_CLNT] = BlizzGames[BNET_CLIENT_APP]; -- dunno what BNET_CLIENT_CLNT is, CLNT means client so I associate it with App
 
@@ -177,7 +182,7 @@ iFriends.Columns = {
 				_G.SetItemRef(("player:%s"):format(member.name), ("|Hplayer:%s|h[%s]|h"):format(member.name, member.name), "LeftButton");
 			end
 		end,
-		scriptUse = function(member) return member.realid and _G.CanCooperateWithToon(member.toon) end,
+		scriptUse = function(member) return member.realid and _G.CanCooperateWithGameAccount(member.toon) end,
 	},
 	race = {
 		label = _G.RACE,
