@@ -361,7 +361,7 @@ do
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add horde player
 			table.insert(self.BNRoster, {
-				"Testchar4", 71, _G.LOCALIZED_CLASS_NAMES_MALE["WARLOCK"], "Hyjal", "", "", 1, 1, "Brigitta Bug", "", "", BNET_CLIENT_WOW, "Testrealm", "Horde", "Orc"
+				"Testchar4", 71, _G.LOCALIZED_CLASS_NAMES_MALE["DEMONHUNTER"], "Hyjal", "", "", 1, 1, "Brigitta Bug", "", "", BNET_CLIENT_WOW, "Testrealm", "Horde", "Orc"
 			});
 			setmetatable(self.BNRoster[(#self.BNRoster)], mt);
 			-- add panda player
