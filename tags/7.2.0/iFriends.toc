@@ -1,0 +1,32 @@
+## Interface: 70200
+## Title: i|cffffffaaFriends|r
+## Version: 7.2.0
+## Notes: The dynamic Friends Display for your LDB!
+## Author: grdn
+## SavedVariables: iFriendsDB
+## OptionalDeps: Ace3, iLib, LibCrayon-3.0, LibDialog-1.0, LibTourist-3.0
+
+# Libraries
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\LibStub\Libstub.lua
+Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+
+Libs\iLib\lib.xml
+Libs\LibTourist-3.0\lib.xml
+Libs\LibCrayon-3.0\lib.xml
+Libs\LibDialog-1.0\lib.xml
+
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+
+# Locales
+Locales\Locales.xml
+
+# Core
+iFriends.lua
+Columns.lua
+Config.lua
