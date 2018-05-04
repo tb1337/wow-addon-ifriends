@@ -41,6 +41,11 @@ local FactionMeta = {
 
 -- Blizzard game table
 local BlizzGames = {
+	["BSAp"] = {
+		name = "Mobile",
+		icon = "|TInterface\\FriendsFrame\\PlusManz-BattleNet:"..iconSize..":"..iconSize.."|t",
+		rgba = {0.3, 1, 1, 0.3},
+	},
 	[BNET_CLIENT_APP] = {
 		name = "Battle.net",
 		icon = "|TInterface\\FriendsFrame\\PlusManz-BattleNet:"..iconSize..":"..iconSize.."|t",
