@@ -304,7 +304,7 @@ do
 						hasFocus, charName, client, charRealm, realmID, charFaction, charRace, charClass, charGuild, charZone, charLevel, gameText, _, _, _, toonID = _G.BNGetFriendGameAccountInfo(i, t);
 						
 						-- save if the player is logged into WoW, all other data will be overwritten
-						if( client == BNET_CLIENT_WOW ) then
+						if( client == _G.BNET_CLIENT_WOW ) then
 							loggedWoW = true;
 							
 							self.BNRoster[i][1]  = charName;
@@ -318,7 +318,7 @@ do
 						else
 							-- only if not logged into WoW!
 							-- if the player is logged on the b.net app, only the client will be overwritten
-							if( client == BNET_CLIENT_APP ) then
+							if( client == _G.BNET_CLIENT_APP or client == "BSAp" ) then
 								loggedApp = true;
 								
 								if( not loggedGame and not loggedWoW ) then
