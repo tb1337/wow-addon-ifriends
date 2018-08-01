@@ -4,7 +4,7 @@
 <Script file="Libs\libdatabroker-1-1\LibDataBroker-1.1.lua"/>
 
 <!--@non-debug@
-<Include file="Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
+<Include file="Libs\CallbackHandler-1.0\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
 <Script file="Libs\LibStub\Libstub.lua"/>
 
 <Include file="Libs\iLib\lib.xml"/>
