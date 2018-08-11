@@ -93,7 +93,9 @@ iFriends.ldb.OnEnter = function(anchor)
 		tip:Show();
 		
 		tip2 = iFriends:GetTooltip("WoW", "UpdateTooltip2");
-		tip2:SetPoint("TOPLEFT", tip, "BOTTOMLEFT", 0, 0);
+		tip2:SetPoint("TOPLEFT", tip, "TOPRIGHT", 0, 0);
+		tip2:SetClampedToScreen(true);
+		--tip2:SmartAnchorTo(tip2);
 		tip2:Show();
 		
 		iFriends:SetSharedAutoHideDelay(0.25, tip, tip2, anchor);		
