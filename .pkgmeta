@@ -23,7 +23,7 @@ externals:
   Libs/AceTimer-3.0:
     url: svn://svn.wowace.com/wow/ace3/mainline/trunk/AceTimer-3.0
   Libs/iLib:
-    url: svn://svn.curseforge.net/wow/ilib/mainline/trunk
+    url: https://github.com/grdn1337/wow-lib-ilib
   Libs/HereBeDragons:
     url: https://repos.wowace.com/wow/herebedragons
     tag: 2.00-release

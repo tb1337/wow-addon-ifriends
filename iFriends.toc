@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: i|cffffffaaFriends|r
-## Version: 8.0.4
+## Version: 8.1.0
 ## Notes: The dynamic Friends Display for your LDB!
 ## Author: grdn
 ## SavedVariables: iFriendsDB
