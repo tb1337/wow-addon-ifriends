@@ -195,7 +195,7 @@ function iFriends:EventHandler()
 		self.ldb.text = ("%d/%d"):format(totalOn, total);
 	end
 	
-	self:SetupFriendsData(friendsOn, bnetOn);
+	self:SetupFriendsData(friendsOn, bnet);
 	self:CheckTooltips("Bnet", "WoW");
 end
 
@@ -258,7 +258,9 @@ do
 		end
 		
 		-- iterate through our battle.net friends, if battle.net is connected
-		if( _G.BNFeaturesEnabledAndConnected() ) then			
+		if( _G.BNFeaturesEnabledAndConnected() ) then
+			local rosterIndex = 1;
+
 			for i = 1, bnetOn do
 				-- determines whether a friend logged into WoW or another game
 				local loggedWoW = false;
@@ -267,7 +269,7 @@ do
 			
 				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, broadcastText, charNote, _, broadcastTime ,_ = _G.BNGetFriendInfo(i);
 				
-				if( isOnline ) then					
+				--if( isOnline ) then					
 					charStatus = "";
 					if( isAFK ) then
 						charStatus = ("<%s>"):format(_G.AFK);
@@ -281,7 +283,7 @@ do
 					end
 					
 					-- create roster table without any info
-					self.BNRoster[i] = {
+					local set = {
 						[1]  = "",
 						[2]  = "",
 						[3]  = "",
@@ -309,14 +311,14 @@ do
 						if( client == _G.BNET_CLIENT_WOW ) then
 							loggedWoW = true;
 							
-							self.BNRoster[i][1]  = charName;
-							self.BNRoster[i][2]  = tonumber(charLevel); -- the bnet API returns the level as string. WTH
-							self.BNRoster[i][3]  = charClass;
-							self.BNRoster[i][4]  = ((not charZone or charZone == "") and _G.UNKNOWN or charZone); -- currently no zones in beta O_o
-							self.BNRoster[i][12] = client;
-							self.BNRoster[i][13] = charRealm;
-							self.BNRoster[i][14] = charFaction;
-							self.BNRoster[i][15] = charRace;
+							set[1]  = charName;
+							set[2]  = tonumber(charLevel); -- the bnet API returns the level as string. WTH
+							set[3]  = charClass;
+							set[4]  = ((not charZone or charZone == "") and _G.UNKNOWN or charZone); -- currently no zones in beta O_o
+							set[12] = client;
+							set[13] = charRealm;
+							set[14] = charFaction;
+							set[15] = charRace;
 						else
 							-- only if not logged into WoW!
 							-- if the player is logged on the b.net app, only the client will be overwritten
@@ -324,23 +326,28 @@ do
 								loggedApp = true;
 								
 								if( not loggedGame and not loggedWoW ) then
-									self.BNRoster[i][12] = client;
+									set[12] = client;
 								end
 							-- if not logged into WoW, but another game, some data will be overwritten
 							else
 								loggedGame = true;
 								
 								if( not loggedWoW ) then
-									self.BNRoster[i][1]  = charName;
-									self.BNRoster[i][4]  = gameText;
-									self.BNRoster[i][12] = client;
+									set[1]  = charName;
+									set[4]  = gameText;
+									set[12] = client;
 								end
 							end
 						end
 					end
-					
-					setmetatable(self.BNRoster[i], mt);
-				end
+
+					if( set[12] ~= "" ) then
+						self.BNRoster[rosterIndex] = set;
+						setmetatable(self.BNRoster[rosterIndex], mt);
+
+						rosterIndex = rosterIndex + 1;
+					end
+				--end
 			end -- end for
 		end -- end if battle.net
 		
