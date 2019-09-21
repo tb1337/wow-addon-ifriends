@@ -83,7 +83,7 @@ iFriends.ldb.OnEnter = function(anchor)
 	end
 	iFriends:HideAllTooltips();
 	
-	_G.ShowFriends();
+	_G.C_FriendList.ShowFriends();
 	
 	local tip;
 	if( showBN and showLocal ) then
@@ -167,8 +167,8 @@ function iFriends:Boot()
 	self:RegisterEvent("BN_FRIEND_INFO_CHANGED", "EventHandler");
 	self:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED", "EventHandler");
 	
-	_G.ShowFriends();
-	LibStub("AceTimer-3.0"):ScheduleRepeatingTimer(_G.ShowFriends, 55);
+	_G.C_FriendList.ShowFriends();
+	LibStub("AceTimer-3.0"):ScheduleRepeatingTimer(_G.C_FriendList.ShowFriends, 55);
 	
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
 end
@@ -179,13 +179,13 @@ iFriends:RegisterEvent("PLAYER_ENTERING_WORLD", "Boot");
 ----------------------
 
 function iFriends:EventHandler()
-	local friends, friendsOn = _G.GetNumFriends();
+	local friends, friendsOn = _G.C_FriendList.GetNumFriends(), _G.C_FriendList.GetNumOnlineFriends();
 	local bnet, bnetOn = 0, 0;
 	
 	if( _G.BNFeaturesEnabledAndConnected() ) then
 		bnet, bnetOn = _G.BNGetNumFriends();
 	end
-	
+
 	local total = friends + bnet;
 	local totalOn = friendsOn + bnetOn;
 	
@@ -241,7 +241,7 @@ do
 		
 		-- iterate through our friends
 		for i = 1, friendsOn do
-			charName, charLevel, charClass, charZone, isOnline, charStatus, charNote = _G.GetFriendInfo(i);
+			charName, charLevel, charClass, charZone, isOnline, charStatus, charNote = _G.C_FriendList.GetFriendInfo(i);
 			
 			if( isOnline ) then
 				self.Roster[i] = {

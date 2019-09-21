@@ -7,7 +7,7 @@ local AddonName, iFriends = ...;
 local L = LibStub("AceLocale-3.0"):GetLocale(AddonName);
 
 local LibCrayon = LibStub("LibCrayon-3.0");
-local LibTourist = LibStub("LibTourist-3.0");
+local LibTourist = LibStub("LibTouristClassic-1.0");
 
 local _G = _G; -- I always use _G.FUNC when I call a Global. Upvalueing done here.
 local format = string.format;
@@ -24,18 +24,15 @@ local COLOR_GOLD = "|cfffed100%s|r";
 local FactionMeta = {
 	Horde = {
 		Color = "EE1919",
-		--City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Orgrimmar"]
-		City  = LibStub("LibTourist-3.0"):GetLookupTable()["Orgrimmar"]
+		City  = LibTourist:GetLookupTable()["Orgrimmar"]
 	},
 	Alliance = {
 		Color = "247FAA",
-		--City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Stormwind City"]
-		City  = LibStub("LibTourist-3.0"):GetLookupTable()["Stormwind City"]
+		City  = LibTourist:GetLookupTable()["Stormwind City"]
 	},
 	Neutral = {
 		Color = "FED100",
-		--City  = LibStub("LibBabble-3.0").data["LibBabble-Zone-3.0"].current["Dalaran"]
-		City  = LibStub("LibTourist-3.0"):GetLookupTable()["Dalaran"]
+		City  = LibTourist:GetLookupTable()["Dalaran"]
 	},
 };
 

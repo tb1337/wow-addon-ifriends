@@ -19,7 +19,7 @@
 <Include file="Libs\AceTimer-3.0\AceTimer-3.0.xml"/>
 
 <Script file="Libs\HereBeDragons\HereBeDragons-2.0.lua"/>
-<Script file="Libs\LibTourist-3.0\LibTourist-3.0.lua"/>
+<Script file="Libs\LibTouristClassic-1.0\LibTouristClassic-1.0.lua"/>
 @end-non-debug@-->
 
 

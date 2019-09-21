@@ -27,13 +27,13 @@ externals:
   Libs/HereBeDragons:
     url: https://repos.wowace.com/wow/herebedragons
     tag: 2.00-release
-  Libs/LibTourist-3.0:
-    url: svn://svn.wowace.com/wow/libtourist-3-0/mainline/trunk
+  Libs/LibTouristClassic-1.0:
+    url: https://repos.wowace.com/wow/libtourist-classic
 
 optional-dependencies:
   - ace3
   - ilib
-  - libtourist-3-0
+  - libtouristclassic-1-0
   - libcrayon-3-0
   - libdialog-1-0
   - herebedragons
