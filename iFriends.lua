@@ -313,11 +313,11 @@ do
 							
 							set[1]  = charName;
 							set[2]  = tonumber(charLevel); -- the bnet API returns the level as string. WTH
-							set[3]  = charClass;
+							set[3]  = charClass ~= "" and charClass or _G.LOCALIZED_CLASS_NAMES_MALE.PRIEST;
 							set[4]  = ((not charZone or charZone == "") and _G.UNKNOWN or charZone); -- currently no zones in beta O_o
 							set[12] = client;
 							set[13] = charRealm;
-							set[14] = charFaction;
+							set[14] = charFaction ~= "" and charFaction or "Neutral";
 							set[15] = charRace;
 						else
 							-- only if not logged into WoW!
