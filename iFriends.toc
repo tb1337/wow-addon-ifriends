@@ -1,6 +1,6 @@
-## Interface: 11302
+## Interface: 11305
 ## Title: i|cffffffaaFriends|r
-## Version: 1.13.1
+## Version: 1.13.3
 ## Notes: The dynamic Friends Display for your LDB!
 ## Author: grdn
 ## SavedVariables: iFriendsDB

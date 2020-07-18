@@ -222,6 +222,7 @@ do
 			elseif( k == "realm" ) then return t[13]
 			elseif( k == "faction")then return t[14]
 			elseif( k == "race"  ) then return t[15]
+			elseif( k == "isSameWoW" ) then return t[16]
 			-- virtual
 			elseif( k == "isWoW" ) then return (not t[12] or t[12] == _G.BNET_CLIENT_WOW)
 			end
@@ -298,7 +299,8 @@ do
 						[12] = "",
 						[13] = "",
 						[14] = "",
-						[15] = ""
+						[15] = "",
+						[16] = false
 					};
 					
 					-- scan thru friends logged in Blizzard games/apps
@@ -310,6 +312,15 @@ do
 						-- save if the player is logged into WoW, all other data will be overwritten
 						if( client == _G.BNET_CLIENT_WOW ) then
 							loggedWoW = true;
+
+							-- try to fix classic/retail realm and zone invisibility
+							if( charRealm == "" and realmID ~= "" and charZone == "" and gameText ~= "" ) then
+								charZone = gameText:match("(.+) %- .+");
+								charRealm = gameText:gsub("^(.+) - ", "");
+								set[16] = false;
+							else
+								set[16] = true;
+							end
 							
 							set[1]  = charName;
 							set[2]  = tonumber(charLevel); -- the bnet API returns the level as string. WTH
