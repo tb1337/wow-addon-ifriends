@@ -83,8 +83,6 @@ iFriends.ldb.OnEnter = function(anchor)
 	end
 	iFriends:HideAllTooltips();
 	
-	_G.ShowFriends();
-	
 	local tip;
 	if( showBN and showLocal ) then
 		local tip2;
@@ -163,14 +161,21 @@ function iFriends:Boot()
 	self.show_colored_columns();
 	self.show_colored_columns = nil;
 
-	self:RegisterEvent("FRIENDLIST_UPDATE", "EventHandler");
+	--self:RegisterEvent("FRIENDLIST_UPDATE", "EventHandler");
+	self:RegisterEvent("BN_CUSTOM_MESSAGE_CHANGED", "EventHandler");
+	self:RegisterEvent("BN_CUSTOM_MESSAGE_LOADED", "EventHandler");
 	self:RegisterEvent("BN_FRIEND_INFO_CHANGED", "EventHandler");
 	self:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED", "EventHandler");
+	self:RegisterEvent("BN_CONNECTED", "EventHandler");
+	self:RegisterEvent("BN_DISCONNECTED", "EventHandler");
+	self:RegisterEvent("BN_INFO_CHANGED", "EventHandler");
+	self:RegisterEvent("FRIENDLIST_UPDATE", "EventHandler");
 	
-	_G.ShowFriends();
-	LibStub("AceTimer-3.0"):ScheduleRepeatingTimer(_G.ShowFriends, 55);
+	--_G.C_FriendList.ShowFriends();
+	--LibStub("AceTimer-3.0"):ScheduleRepeatingTimer(_G.C_FriendList.ShowFriends, 55);
 	
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+	self:EventHandler();
 end
 iFriends:RegisterEvent("PLAYER_ENTERING_WORLD", "Boot");
 
@@ -179,13 +184,14 @@ iFriends:RegisterEvent("PLAYER_ENTERING_WORLD", "Boot");
 ----------------------
 
 function iFriends:EventHandler()
-	local friends, friendsOn = _G.GetNumFriends();
+	local friends = _G.C_FriendList.GetNumFriends();
+	local friendsOn = _G.C_FriendList.GetNumOnlineFriends();
 	local bnet, bnetOn = 0, 0;
-	
+
 	if( _G.BNFeaturesEnabledAndConnected() ) then
 		bnet, bnetOn = _G.BNGetNumFriends();
 	end
-	
+
 	local total = friends + bnet;
 	local totalOn = friendsOn + bnetOn;
 	
@@ -237,7 +243,7 @@ do
 		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, broadcastText, numToons, broadcastTime; -- additional BNET vars
 		local hasFocus, client, realmName, realmID, charFaction, charRace, charGuild, toonID; -- toon specific vars
 
-		local info;
+		local info, accountInfo;
 		
 		local now = time();
 		
@@ -247,7 +253,7 @@ do
 			info = _G.C_FriendList.GetFriendInfoByIndex(i);
 
 			if( info and info.connected ) then
-				Roster[i] = {
+				self.Roster[i] = {
 					[1] = info.name,
 					[2] = info.level,
 					[3] = info.className,
@@ -263,96 +269,98 @@ do
 		-- iterate through our battle.net friends, if battle.net is connected
 		if( _G.BNFeaturesEnabledAndConnected() ) then
 			local rosterIndex = 1;
-
+			
 			for i = 1, bnetOn do
 				-- determines whether a friend logged into WoW or another game
 				local loggedWoW = false;
 				local loggedApp = false;
 				local loggedGame = false;
-			
-				pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, broadcastText, charNote, _, broadcastTime ,_ = _G.BNGetFriendInfo(i);
 				
-				--if( isOnline ) then					
-					charStatus = "";
-					if( isAFK ) then
-						charStatus = ("<%s>"):format(_G.AFK);
-					elseif( isDND ) then
-						charStatus = ("<%s>"):format(_G.DND);
-					end
-					
-					-- add broadcast time to broadcast text, CurseForge Ticket #4 by CenujiDev
-					if( broadcastText and broadcastText ~= "" ) then
-						broadcastText = ("%s (%s)"):format(broadcastText, _G.SecondsToTime(now - broadcastTime, false, true, 1));
-					end
-					
-					-- create roster table without any info
-					local set = {
-						[1]  = "",
-						[2]  = "",
-						[3]  = "",
-						[4]  = "",
-						[5]  = charStatus,
-						[6]  = charNote or "",
-						[7]  = pID,
-						[8]  = toonID,
-						[9]  = presenceName,
-						[10] = battleTag or "",
-						[11] = broadcastText or "",
-						[12] = "",
-						[13] = "",
-						[14] = "",
-						[15] = ""
-					};
-					
-					-- scan thru friends logged in Blizzard games/apps
-					numToons = _G.BNGetNumFriendGameAccounts(i);
-					
-					for t = 1, numToons do
-						hasFocus, charName, client, charRealm, realmID, charFaction, charRace, charClass, charGuild, charZone, charLevel, gameText, _, _, _, toonID = _G.BNGetFriendGameAccountInfo(i, t);
+				--pID, presenceName, battleTag, isBattleTagPresence, _, toonID, _, isOnline, _, isAFK, isDND, broadcastText, charNote, _, broadcastTime ,_ = _G.BNGetFriendInfo(i);
+				info = _G.C_BattleNet.GetFriendAccountInfo(i);
+				
+				--if( isOnline ) then                    
+				charStatus = "";
+				if( info.isAFK ) then
+					charStatus = ("<%s>"):format(_G.AFK);
+				elseif( info.isDND ) then
+					charStatus = ("<%s>"):format(_G.DND);
+				end
+				
+				-- add broadcast time to broadcast text, CurseForge Ticket #4 by CenujiDev
+				broadcastText = "";
+				if( info.customMessage and info.customMessage ~= "" ) then
+					broadcastText = ("%s (%s)"):format(info.customMessage, _G.SecondsToTime(now - info.customMessageTime, false, true, 1));
+				end
+				
+				-- create roster table without any info
+				local set = {
+					[1]  = "",
+					[2]  = "",
+					[3]  = "",
+					[4]  = "",
+					[5]  = charStatus,
+					[6]  = info.note or "",
+					[7]  = info.bnetAccountID,
+					[8]  = info.gameAccountInfo.gameAccountID,
+					[9]  = info.accountName, -- presenceName,
+					[10] = info.battleTag or "",
+					[11] = broadcastText or "",
+					[12] = "",
+					[13] = "",
+					[14] = "",
+					[15] = ""
+				};
+				
+				-- scan thru friends logged in Blizzard games/apps
+				numToons = _G.C_BattleNet.GetFriendNumGameAccounts(i);
+				
+				for t = 1, numToons do
+					--hasFocus, charName, client, charRealm, realmID, charFaction, charRace, charClass, charGuild, charZone, charLevel, gameText, _, _, _, toonID = _G.BNGetFriendGameAccountInfo(i, t);
+					local accountInfo = C_BattleNet.GetFriendGameAccountInfo(i, t);
+
+					-- save if the player is logged into WoW, all other data will be overwritten
+					if( accountInfo.clientProgram == _G.BNET_CLIENT_WOW ) then
+						loggedWoW = true;
 						
-						-- save if the player is logged into WoW, all other data will be overwritten
-						if( client == _G.BNET_CLIENT_WOW ) then
-							loggedWoW = true;
-							
-							set[1]  = charName;
-							set[2]  = tonumber(charLevel); -- the bnet API returns the level as string. WTH
-							set[3]  = charClass;
-							set[4]  = ((not charZone or charZone == "") and _G.UNKNOWN or charZone); -- currently no zones in beta O_o
-							set[12] = client;
-							set[13] = charRealm;
-							set[14] = charFaction;
-							set[15] = charRace;
+						set[1]  = accountInfo.characterName;
+						set[2]  = accountInfo.characterLevel;
+						set[3]  =  accountInfo.className;
+						set[4]  = ((not accountInfo.areaName or accountInfo.areaName == "") and _G.UNKNOWN or accountInfo.areaName); -- currently no zones in beta O_o
+						set[12] = accountInfo.clientProgram;
+						set[13] = accountInfo.realmName or "";
+						set[14] = accountInfo.factionName;
+						set[15] = accountInfo.raceName;
+					else
+						-- only if not logged into WoW!
+						-- if the player is logged on the b.net app, only the client will be overwritten
+						if( accountInfo.clientProgram == _G.BNET_CLIENT_APP or accountInfo.clientProgram == "BSAp" ) then
+						loggedApp = true;
+						
+						if( not loggedGame and not loggedWoW ) then
+							set[12] = accountInfo.clientProgram;
+						end
+						-- if not logged into WoW, but another game, some data will be overwritten
 						else
-							-- only if not logged into WoW!
-							-- if the player is logged on the b.net app, only the client will be overwritten
-							if( client == _G.BNET_CLIENT_APP or client == "BSAp" ) then
-								loggedApp = true;
-								
-								if( not loggedGame and not loggedWoW ) then
-									set[12] = client;
-								end
-							-- if not logged into WoW, but another game, some data will be overwritten
-							else
-								loggedGame = true;
-								
-								if( not loggedWoW ) then
-									set[1]  = charName;
-									set[4]  = gameText;
-									set[12] = client;
-								end
-							end
+						loggedGame = true;
+						
+						if( not loggedWoW ) then
+							set[1]  = accountInfo.characterName;
+							set[4]  = accountInfo.richPresence;
+							set[12] = accountInfo.clientProgram;
+						end
 						end
 					end
-
-					if( set[12] ~= "" ) then
-						self.BNRoster[rosterIndex] = set;
-						setmetatable(self.BNRoster[rosterIndex], mt);
-
-						rosterIndex = rosterIndex + 1;
-					end
-				--end
+				end
+				
+				if( set[12] ~= "" ) then
+					self.BNRoster[rosterIndex] = set;
+					setmetatable(self.BNRoster[rosterIndex], mt);
+					
+					rosterIndex = rosterIndex + 1;
+				end
 			end -- end for
-		end -- end if battle.net
+		end -- end battle.Net
 		
 		--@do-not-package@
 		--[[
@@ -488,9 +496,9 @@ function iFriends:UpdateTooltip(tip, isLocal)
 				member = Roster[y]; -- fetch member from Roster and brush infos to the cells
 				tip:SetCell(line, x, info.brush(member), nil, self.db.Column[name].Align);
 				
-				if( info.script and self.db.Column[name].EnableScript and info.scriptUse(member) ) then
-					tip:SetCellScript(line, x, "OnMouseDown", info.script, member);
-				end
+				-- if( info.script and self.db.Column[name].EnableScript and info.scriptUse(member) ) then
+				-- 	tip:SetCellScript(line, x, "OnMouseDown", info.script, member);
+				-- end
 			end
 		end -- end for x
 		
