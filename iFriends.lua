@@ -236,23 +236,26 @@ do
 		local _, charName, charLevel, charClass, charZone, isOnline, charStatus, charNote;
 		local pID, presenceName, battleTag, isBattleTagPresence, toonID, isAFK, isDND, broadcastText, numToons, broadcastTime; -- additional BNET vars
 		local hasFocus, client, realmName, realmID, charFaction, charRace, charGuild, toonID; -- toon specific vars
+
+		local info;
 		
 		local now = time();
 		
 		-- iterate through our friends
 		for i = 1, friendsOn do
-			charName, charLevel, charClass, charZone, isOnline, charStatus, charNote = _G.GetFriendInfo(i);
-			
-			if( isOnline ) then
-				self.Roster[i] = {
-					[1] = charName,
-					[2] = charLevel,
-					[3] = charClass,
-					[4] = charZone or _G.UNKNOWN,  -- actually may happen o_O
-					[5] = charStatus or "",
-					[6] = charNote or ""
+			--charName, charLevel, charClass, charZone, isOnline, charStatus, charNote = _G.GetFriendInfo(i);
+			info = _G.C_FriendList.GetFriendInfoByIndex(i);
+
+			if( info and info.connected ) then
+				Roster[i] = {
+					[1] = info.name,
+					[2] = info.level,
+					[3] = info.className,
+					[4] = info.area or _G.UNKNOWN,
+					[5] = info.afk and "AFK" or info.dnd and "DND" or "",
+					[6] = ""
 				};
-				
+
 				setmetatable(self.Roster[i], mt);
 			end
 		end
